@@ -6,8 +6,7 @@
 <title>CERITAKU - Platform Literasi Digital Tanah Datar</title>
 <script src="https://cdn.tailwindcss.com"></script>
 <script src="https://unpkg.com/lucide@0.453.0/dist/umd/lucide.min.js"></script>
-<!-- Google Sign-In (aktif jika GOOGLE_CLIENT_ID diisi) -->
-<script src="https://accounts.google.com/gsi/client" async defer></script>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.45.4/dist/umd/supabase.min.js"></script>
 <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
 <script>
 tailwind.config={theme:{extend:{fontFamily:{sans:['"Plus Jakarta Sans"','system-ui','sans-serif']},colors:{navy:'#14213D',ct:{orange:'#EA6A1F',peach:'#FCDDBF',sky:'#DCE9EE',teal:'#7CCBC4',sun:'#FBE08A'}}}}}
@@ -110,6 +109,8 @@ body{background:#FBF8F4}
   </ol>
 </section>
 
+<section id="tab-admin" class="hidden py-10 max-w-3xl mx-auto px-4 sm:px-6 lg:px-8"></section>
+
 <!-- RANKING -->
 <section id="tab-ranking" class="hidden py-10 max-w-3xl mx-auto px-4 sm:px-6 lg:px-8">
   <h2 class="text-3xl font-extrabold">Ranking Penulis</h2>
@@ -127,18 +128,6 @@ body{background:#FBF8F4}
     <h3 id="auth-title" class="text-2xl font-extrabold"></h3>
     <p id="auth-sub" class="text-sm text-slate-600 mt-1"></p>
 
-    <div id="google-area" class="mt-5">
-      <div id="gbtn" class="flex justify-center"></div>
-      <button id="gdemo" type="button" onclick="googleDemo()" class="w-full flex items-center justify-center gap-3 border-2 border-slate-200 rounded-xl py-2.5 font-semibold hover:bg-slate-50">
-        <svg width="18" height="18" viewBox="0 0 48 48"><path fill="#4285F4" d="M45 24.5c0-1.6-.1-3.1-.4-4.5H24v8.5h11.8c-.5 2.7-2.1 5-4.4 6.5v5.4h7.1c4.1-3.8 6.5-9.4 6.5-15.9z"/><path fill="#34A853" d="M24 46c5.9 0 10.9-2 14.5-5.3l-7.1-5.4c-2 1.3-4.5 2.1-7.4 2.1-5.7 0-10.5-3.8-12.2-9H4.5v5.6C8.1 41.1 15.5 46 24 46z"/><path fill="#FBBC05" d="M11.8 28.4c-.4-1.3-.7-2.7-.7-4.4s.3-3 .7-4.4v-5.6H4.5C3 17 2 20.400 2 24s1 7 2.500 10z"/><path fill="#EA4335" d="M24 10.600c3.200 0 6.100 1.100 8.300 3.200l6.200-6.200C34.900 4.100 29.900 2 24 2 15.500 2 8.100 6.900 4.500 14l7.300 5.600c1.700-5.200 6.500-9 12.200-9z"/></svg>
-        <span id="gtext">Lanjutkan dengan Google</span></button>
-      <div id="demo-box" class="hidden mt-3 p-3 rounded-xl bg-amber-50 text-xs text-amber-900 space-y-2">
-        <p><b>Mode demo:</b> GOOGLE_CLIENT_ID belum diisi, jadi akun Google disimulasikan. Isi data akun Google contoh:</p>
-        <input id="d-name" class="inp" placeholder="Nama di akun Google"><input id="d-email" type="email" class="inp" placeholder="email@gmail.com">
-        <button type="button" onclick="googleDemoGo()" class="btn w-full py-2">Lanjut</button></div>
-      <div class="flex items-center gap-3 my-4 text-xs text-slate-400"><span class="h-px bg-slate-200 flex-1"></span>atau pakai email<span class="h-px bg-slate-200 flex-1"></span></div>
-    </div>
-
     <form id="auth-form" class="space-y-3" onsubmit="return submitAuth(event)">
       <div id="role-box" class="hidden">
         <p class="text-sm font-bold mb-2">Kamu mendaftar sebagai</p>
@@ -151,8 +140,7 @@ body{background:#FBF8F4}
       <input id="f-email" type="email" class="inp" placeholder="Email" autocomplete="email" required>
       <input id="f-pass" type="password" class="inp" placeholder="Kata sandi (min. 6 karakter)" autocomplete="current-password" minlength="6">
       <div id="reg-extra" class="space-y-3">
-        <input id="f-school" class="inp" list="schools" placeholder="Asal sekolah (SMA/SMK/MA)">
-        <datalist id="schools"><option>SMAN 1 Batusangkar</option><option>SMAN 2 Batusangkar</option><option>SMAN 1 Lintau Buo</option><option>SMAN 1 Sungayang</option><option>SMAN 1 Pariangan</option><option>SMAN 1 Rambatan</option></datalist>
+        <select id="f-school" class="inp" aria-label="Asal sekolah"></select>
         <input id="f-id" class="inp" placeholder="NISN">
       </div>
       <p id="auth-err" class="hidden text-sm text-red-600" role="alert"></p>
@@ -176,160 +164,166 @@ body{background:#FBF8F4}
 <div id="toast" class="hidden fixed bottom-6 left-1/2 -translate-x-1/2 z-[60] bg-navy text-white text-sm px-5 py-3 rounded-xl shadow-lg" role="status"></div>
 
 <script>
-/* ============ KONFIGURASI ============
-   Isi dengan OAuth Client ID dari Google Cloud Console (Web application)
-   agar tombol "Masuk dengan Google" yang asli aktif. Kosong = mode demo. */
-const GOOGLE_CLIENT_ID = '';
+/* ============ KONFIGURASI SUPABASE (Project Settings > API) ============
+   Login memakai Email + Kata sandi (gratis). Supabase > Authentication > Providers > Email harus aktif. */
+const SUPABASE_URL='https://xsfsdnahdseblxsbtdwa.supabase.co', SUPABASE_ANON_KEY='eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InhzZnNkbmFoZHNlYmx4c2J0ZHdhIiwicm9sZSI6ImFub24iLCJpYXQiOjE3OTM5NDE3OTQsImV4cCI6MjEwOTUxNzc5NH0.miyAz4LPkbCrFWR9ilCafQYYfGoEN_Tz2AI5P47SnfM';
+const sb=(SUPABASE_URL&&window.supabase)?supabase.createClient(SUPABASE_URL,SUPABASE_ANON_KEY):null;
 
-/* ============ DATA ============ */
 const NAV=[['beranda','Beranda'],['pojok-baca','Pojok Baca'],['pojok-karya','Pojok Karya'],['pojok-antologi','Pojok Antologi'],['ranking','Ranking']];
 const CATS=['Semua','Cerita Pendek','Esai','Puisi','Legenda'];
-const SEED=[
- {id:1,t:'Rantau Anak Minang',a:'Andika Pratama',s:'SMAN 1 Batusangkar',c:'Cerita Pendek',x:'Andika menatap bus malam yang membawanya meninggalkan Batusangkar. Di tas, ada rendang buatan amak dan selembar pesan: pulanglah kalau sudah menjadi orang yang membanggakan kampung.\n\nDi perantauan ia belajar bahwa kata “merantau” bukan hanya soal jarak, tetapi tentang menjaga nama baik nagari di setiap langkah.'},
- {id:2,t:'Senja di Danau Singkarak',a:'Nabila Putri',s:'SMAN 2 Batusangkar',c:'Puisi',x:'Air tenang memantulkan jingga,\nperahu pulang membawa cerita.\nDi tepi danau, aku belajar\nbahwa diam pun bisa bernyanyi.'},
- {id:3,t:'Surau di Kaki Marapi',a:'Rizky Hidayat',s:'SMAN 1 Lintau Buo',c:'Esai',x:'Surau dulu menjadi tempat anak laki-laki Minang belajar agama, adat, dan silat. Kini fungsinya bergeser, tetapi nilai kebersamaannya masih bisa kita rawat lewat kegiatan literasi.\n\nEsai ini mengajak pembaca melihat surau sebagai ruang belajar yang tak pernah tutup.'},
- {id:4,t:'Legenda Batu Batikam',a:'Salsabila Rahmi',s:'SMAN 1 Sungayang',c:'Legenda',x:'Konon, di Lima Kaum ada batu yang berlubang bekas tikaman keris. Dari batu itulah perundingan dua pemimpin menemukan jalan damai.\n\nAku menulis ulang kisah itu dari sudut pandang seorang anak penjaga batu.'},
- {id:5,t:'Hujan di Pagaruyung',a:'Fajar Ramadhan',s:'SMAN 1 Pariangan',c:'Cerita Pendek',x:'Hujan turun deras ketika rombongan study tour tiba. Fajar berteduh di bawah gonjong istana dan bertemu seorang penjaga tua yang bercerita tentang masa kecilnya.\n\n“Rumah gadang itu tidak pernah benar-benar kosong,” katanya.'},
- {id:6,t:'Anyaman Tangan Bundo',a:'Aulia Zahra',s:'SMAN 1 Rambatan',c:'Esai',x:'Bundo menganyam pandan sambil bercerita. Setiap helai yang saling silang mengajarkanku bahwa hal sederhana pun butuh kesabaran.\n\nEsai ini merekam keterampilan yang nyaris hilang dari dapur nenek kita.'}];
-const RANK=[['Andika Pratama','SMAN 1 Batusangkar',1240],['Nabila Putri','SMAN 2 Batusangkar',1105],['Rizky Hidayat','SMAN 1 Lintau Buo',980],['Salsabila Rahmi','SMAN 1 Sungayang',910],['Fajar Ramadhan','SMAN 1 Pariangan',860]];
-
-/* ============ PENYIMPANAN (localStorage; demo tanpa server) ============ */
-const db={get:(k,d)=>{try{return JSON.parse(localStorage.getItem(k))??d}catch{return d}},set:(k,v)=>{try{localStorage.setItem(k,JSON.stringify(v))}catch{}}};
-let users=db.get('ct_users',{}), works=db.get('ct_works',[]), me=users[db.get('ct_session','')]||null, tab='beranda', cat='Semua', mode='login', gProfile=null;
+const TABS=()=>me&&me.role==='admin'?[...NAV,['admin','Admin']]:NAV;
+let me=null,tab='beranda',cat='Semua',mode='login',gProfile=null,pub=[],schools=[],eid=null;
 const $=id=>document.getElementById(id);
-const esc=s=>String(s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
-async function hash(s){try{const b=await crypto.subtle.digest('SHA-256',new TextEncoder().encode(s));return [...new Uint8Array(b)].map(x=>x.toString(16).padStart(2,'0')).join('')}catch{return btoa(s)}}
-function toast(m){const t=$('toast');t.textContent=m;t.classList.remove('hidden');clearTimeout(toast.h);toast.h=setTimeout(()=>t.classList.add('hidden'),2800)}
+const esc=s=>String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+function toast(m){const t=$('toast');t.textContent=m;t.classList.remove('hidden');clearTimeout(toast.h);toast.h=setTimeout(()=>t.classList.add('hidden'),3200)}
 function icons(){window.lucide&&lucide.createIcons()}
 function closeModal(id){$(id).classList.add('hidden')}
+const noSB=()=>`<div class="bg-amber-50 text-amber-900 rounded-2xl p-6 text-sm">Backend belum dikonfigurasi. Isi <b>SUPABASE_URL</b> dan <b>SUPABASE_ANON_KEY</b> di bagian atas script (lihat supabase_schema.sql).</div>`;
 
-/* ============ NAVIGASI ============ */
-function switchTab(t){
-  tab=t;
-  NAV.forEach(([k])=>$('tab-'+k).classList.toggle('hidden',k!==t));
-  const h=NAV.map(([k,l])=>`<button onclick="switchTab('${k}')" class="navlink ${k===t?'on':''}" ${k===t?'aria-current="page"':''}>${l}</button>`).join('');
-  $('nav-desktop').innerHTML=h; $('nav-mobile').innerHTML=h;
-  if(t==='pojok-baca')renderStories(); if(t==='pojok-karya')renderKarya(); if(t==='ranking')renderRank();
-  scrollTo({top:0}); icons();
+/* ============ NAVIGASI (URL: #/pojok-baca, #/baca/12) ============ */
+function switchTab(t,fromRoute){
+  if(!fromRoute&&location.hash!=='#/'+t){location.hash='/'+t;return}
+  tab=t; document.querySelectorAll('main>section').forEach(s=>s.classList.toggle('hidden',s.id!=='tab-'+t));
+  const h=TABS().map(([k,l])=>`<button onclick="switchTab('${k}')" class="navlink ${k===t?'on':''}" ${k===t?'aria-current="page"':''}>${l}</button>`).join('');
+  $('nav-desktop').innerHTML=h;$('nav-mobile').innerHTML=h;
+  ({'pojok-baca':renderStories,'pojok-karya':renderKarya,ranking:renderRank,admin:renderAdmin})[t]?.();
+  scrollTo({top:0});icons();
+}
+function route(){
+  const h=location.hash.replace('#/',''),m=h.match(/^baca\/(\d+)$/);
+  if(m){switchTab('pojok-baca',true);readStory(m[1]);return}
+  switchTab(TABS().some(x=>x[0]===h)?h:'beranda',true);
 }
 function renderAuthArea(){
-  $('auth-area').innerHTML = me ? `
-    <div class="flex items-center gap-2 pl-3 pr-1 py-1 rounded-full border border-slate-200 bg-white">
-      <span class="hidden sm:block text-sm font-semibold max-w-[9rem] truncate">${esc(me.name)}</span>
-      <span class="text-[11px] font-bold px-2 py-0.5 rounded-full ${me.role==='guru'?'bg-teal-100 text-teal-800':'bg-ct-peach text-ct-orange'}">${me.role==='guru'?'Guru':'Siswa'}</span>
-      <button onclick="logout()" class="text-sm font-semibold px-3 py-1.5 rounded-full hover:bg-slate-100">Keluar</button></div>`
-  : `<button onclick="openAuth('login')" class="px-6 py-2.5 rounded-lg border border-slate-400 font-semibold hover:border-ct-orange hover:text-ct-orange transition">Masuk</button>
-     <button onclick="openAuth('register')" class="btn px-5 py-2.5 hidden sm:block">Daftar Sekarang</button>`;
+  const b={siswa:['Siswa','bg-ct-peach text-ct-orange'],guru:['Guru','bg-teal-100 text-teal-800'],admin:['Admin','bg-navy text-white']};
+  $('auth-area').innerHTML=me?`<div class="flex items-center gap-2 pl-3 pr-1 py-1 rounded-full border border-slate-200 bg-white">
+    <span class="hidden sm:block text-sm font-semibold max-w-[9rem] truncate">${esc(me.name)}</span>
+    <span class="text-[11px] font-bold px-2 py-0.5 rounded-full ${b[me.role][1]}">${b[me.role][0]}</span>
+    <button onclick="logout()" class="text-sm font-semibold px-3 py-1.5 rounded-full hover:bg-slate-100">Keluar</button></div>`
+  :`<button onclick="openAuth('login')" class="px-6 py-2.5 rounded-lg border border-slate-400 font-semibold hover:border-ct-orange hover:text-ct-orange transition">Masuk</button>
+    <button onclick="openAuth('register')" class="btn px-4 sm:px-5 py-2.5 text-sm sm:text-base">Daftar</button>`;
 }
 
 /* ============ POJOK BACA ============ */
-function renderStories(){
+async function renderStories(){
   $('filters').innerHTML=CATS.map(c=>`<button onclick="cat='${c}';renderStories()" class="px-4 py-2 rounded-xl text-xs font-bold ${c===cat?'bg-ct-orange text-white':'bg-white border border-slate-200 text-slate-600 hover:bg-slate-50'}">${c}</button>`).join('');
-  const q=$('q').value.toLowerCase();
-  const list=[...works.filter(w=>w.status==='disetujui'),...SEED].filter(w=>(cat==='Semua'||w.c===cat)&&(w.t+w.a+w.s).toLowerCase().includes(q));
+  if(!sb){$('stories').innerHTML=noSB();return}
+  if(!pub.length||renderStories.dirty){const{data}=await sb.from('works').select('id,title,category,author_name,school_name').eq('status','disetujui').order('created_at',{ascending:false});pub=data||[];renderStories.dirty=false}
+  const q=$('q').value.toLowerCase(),list=pub.filter(w=>(cat==='Semua'||w.category===cat)&&(w.title+w.author_name+w.school_name).toLowerCase().includes(q));
   $('stories').innerHTML=list.map((w,i)=>`<div class="bg-white rounded-2xl overflow-hidden shadow-sm flex flex-col">
-    <div class="h-40 relative flex items-center justify-center ${['bg-ct-peach','bg-ct-teal/50','bg-ct-sun/70'][i%3]}"><i data-lucide="${w.c==='Puisi'?'feather':'book-open-text'}" class="w-12 h-12 text-navy/40"></i><span class="absolute top-3 right-3 px-3 py-1 bg-ct-orange text-white text-[10px] font-bold rounded-full">${w.c}</span></div>
-    <div class="p-5"><h3 class="text-lg font-bold"><button class="text-left hover:text-ct-orange" onclick="readStory(${w.id})">${esc(w.t)}</button></h3>
-    <p class="text-xs text-slate-500 mt-1">oleh <b class="text-slate-700">${esc(w.a)}</b> &middot; ${esc(w.s)}</p></div></div>`).join('')||'<p class="text-slate-500 col-span-full">Belum ada karya yang cocok. Coba kata kunci lain.</p>';
+    <div class="h-40 relative flex items-center justify-center ${['bg-ct-peach','bg-ct-teal/50','bg-ct-sun/70'][i%3]}"><i data-lucide="${w.category==='Puisi'?'feather':'book-open-text'}" class="w-12 h-12 text-navy/40"></i><span class="absolute top-3 right-3 px-3 py-1 bg-ct-orange text-white text-[10px] font-bold rounded-full">${w.category}</span></div>
+    <div class="p-5"><h3 class="text-lg font-bold"><a href="#/baca/${w.id}" class="hover:text-ct-orange">${esc(w.title)}</a></h3>
+    <p class="text-xs text-slate-500 mt-1">oleh <b class="text-slate-700">${esc(w.author_name)}</b> &middot; ${esc(w.school_name)}</p></div></div>`).join('')||'<p class="text-slate-500 col-span-full">Belum ada karya yang tayang. Jadilah penulis pertama.</p>';
   icons();
 }
-function readStory(id){
-  const w=[...works,...SEED].find(x=>x.id===id); if(!w)return;
-  $('r-cat').textContent=w.c; $('r-title').textContent=w.t; $('r-by').textContent='oleh '+w.a+' · '+w.s;
-  $('r-body').innerHTML=w.x.split('\n\n').map(p=>`<p>${esc(p).replace(/\n/g,'<br>')}</p>`).join('');
+async function readStory(id){
+  const{data:w}=await sb.from('works').select('*').eq('id',id).maybeSingle(); if(!w)return toast('Karya tidak ditemukan');
+  $('r-cat').textContent=w.category;$('r-title').textContent=w.title;$('r-by').textContent='oleh '+w.author_name+' · '+w.school_name;
+  $('r-body').innerHTML=w.body.split('\n\n').map(p=>`<p>${esc(p).replace(/\n/g,'<br>')}</p>`).join('');
   $('read-modal').classList.remove('hidden');
 }
 
-/* ============ POJOK KARYA (berbeda per peran) ============ */
-function renderKarya(){
-  const el=$('tab-pojok-karya');
-  if(!me){el.innerHTML=`<div class="bg-white rounded-3xl p-10 text-center shadow-sm"><i data-lucide="lock-keyhole" class="w-10 h-10 mx-auto text-ct-orange"></i><h2 class="text-2xl font-extrabold mt-3">Masuk dulu untuk menulis</h2><p class="text-slate-600 mt-1">Daftar sebagai siswa untuk menulis, atau sebagai guru untuk mengkurasi karya.</p><button onclick="openAuth('register')" class="btn mt-5">Daftar Sekarang</button></div>`;return icons()}
+/* ============ POJOK KARYA (per peran) ============ */
+async function renderKarya(){
+  const el=$('tab-pojok-karya'),msg=(i,t,s,b='')=>el.innerHTML=`<div class="bg-white rounded-3xl p-10 text-center shadow-sm"><i data-lucide="${i}" class="w-10 h-10 mx-auto text-ct-orange"></i><h2 class="text-2xl font-extrabold mt-3">${t}</h2><p class="text-slate-600 mt-1">${s}</p>${b}</div>`;
+  if(!sb){el.innerHTML=noSB();return}
+  if(!me){msg('lock-keyhole','Masuk dulu untuk menulis','Daftar sebagai siswa untuk menulis, atau sebagai guru untuk mengkurasi karya.','<button onclick="openAuth(\'register\')" class="btn mt-5">Daftar Sekarang</button>');return icons()}
+  if(me.role==='admin'){msg('shield-check','Kamu admin','Kelola verifikasi guru di tab Admin.');return icons()}
   if(me.role==='guru'){
-    const q=works.filter(w=>w.status==='menunggu');
-    el.innerHTML=`<h2 class="text-3xl font-extrabold">Kurasi Karya</h2><p class="text-slate-600 mt-1">${q.length} karya menunggu penilaianmu.</p><div class="mt-6 space-y-4">`+
-    (q.map(w=>`<div class="bg-white rounded-2xl p-5 shadow-sm"><div class="flex justify-between gap-3"><div><b class="text-lg">${esc(w.t)}</b><p class="text-xs text-slate-500">${w.c} &middot; ${esc(w.a)} &middot; ${esc(w.s)}</p></div></div><p class="text-sm text-slate-700 mt-3 whitespace-pre-line">${esc(w.x.slice(0,400))}${w.x.length>400?'…':''}</p><div class="flex gap-2 mt-4"><button onclick="curate(${w.id},'disetujui')" class="btn py-2 text-sm">Setujui &amp; tayangkan</button><button onclick="curate(${w.id},'revisi')" class="px-4 py-2 rounded-xl border-2 border-slate-200 text-sm font-bold hover:bg-slate-50">Minta revisi</button></div></div>`).join('')||'<div class="bg-white rounded-2xl p-8 text-center text-slate-500">Belum ada karya baru. Karya siswa akan muncul di sini.</div>')+'</div>';
-  } else {
-    const mine=works.filter(w=>w.uid===me.email);
-    const lab={menunggu:'Menunggu kurasi',disetujui:'Tayang',revisi:'Perlu revisi'}, col={menunggu:'bg-amber-100 text-amber-800',disetujui:'bg-emerald-100 text-emerald-800',revisi:'bg-red-100 text-red-700'};
-    el.innerHTML=`<h2 class="text-3xl font-extrabold">Pojok Karya</h2><p class="text-slate-600 mt-1">Tulis karyamu. Guru akan mengkurasi sebelum tayang di Pojok Baca.</p>
-    <form onsubmit="return saveWork(event)" class="bg-white rounded-2xl p-6 shadow-sm mt-6 space-y-3">
-      <input id="w-t" class="inp" placeholder="Judul karya" required maxlength="80">
-      <select id="w-c" class="inp">${CATS.slice(1).map(c=>`<option>${c}</option>`).join('')}</select>
-      <textarea id="w-x" class="inp min-h-[180px]" placeholder="Mulai menulis di sini..." required minlength="40"></textarea>
-      <button class="btn">Kirim untuk dikurasi</button></form>
-    <h3 class="font-extrabold text-xl mt-8">Karyaku</h3><div class="mt-3 space-y-3">`+(mine.map(w=>`<div class="bg-white rounded-xl p-4 shadow-sm flex justify-between items-center gap-3"><div><b>${esc(w.t)}</b><p class="text-xs text-slate-500">${w.c}</p></div><span class="text-xs font-bold px-3 py-1 rounded-full ${col[w.status]}">${lab[w.status]}</span></div>`).join('')||'<p class="text-slate-500 text-sm">Belum ada karya. Ceritamu dimulai dari kotak di atas.</p>')+'</div>';
+    if(!me.verified){msg('hourglass','Menunggu verifikasi admin','Akun gurumu aktif setelah admin memverifikasi. Kamu bisa membaca karya seperti biasa.');return icons()}
+    const{data:q=[]}=await sb.from('works').select('*').eq('status','menunggu').order('created_at');
+    el.innerHTML=`<h2 class="text-3xl font-extrabold">Kurasi Karya</h2><p class="text-slate-600 mt-1">${q.length} karya dari ${esc(me.school)} menunggu penilaianmu.</p><div class="mt-6 space-y-4">`+
+    (q.map(w=>`<div class="bg-white rounded-2xl p-5 shadow-sm"><b class="text-lg">${esc(w.title)}</b><p class="text-xs text-slate-500">${w.category} &middot; ${esc(w.author_name)}</p>
+    <p class="text-sm text-slate-700 mt-3 whitespace-pre-line">${esc(w.body)}</p>
+    <textarea id="fb-${w.id}" class="inp mt-3" rows="2" placeholder="Catatan untuk siswa (wajib jika minta revisi)"></textarea>
+    <div class="flex gap-2 mt-3"><button onclick="curate(${w.id},'disetujui')" class="btn py-2 text-sm">Setujui &amp; tayangkan</button><button onclick="curate(${w.id},'revisi')" class="px-4 py-2 rounded-xl border-2 border-slate-200 text-sm font-bold hover:bg-slate-50">Minta revisi</button></div></div>`).join('')||'<div class="bg-white rounded-2xl p-8 text-center text-slate-500">Belum ada karya baru dari sekolahmu.</div>')+'</div>';
+    return icons();
   }
-  icons();
+  const{data:mine=[]}=await sb.from('works').select('*').eq('author_id',me.id).order('updated_at',{ascending:false});
+  const lab={draf:'Draf',menunggu:'Menunggu kurasi',disetujui:'Tayang',revisi:'Perlu revisi'},col={draf:'bg-slate-100 text-slate-700',menunggu:'bg-amber-100 text-amber-800',disetujui:'bg-emerald-100 text-emerald-800',revisi:'bg-red-100 text-red-700'};
+  window._mine=mine;
+  el.innerHTML=`<h2 class="text-3xl font-extrabold">Pojok Karya</h2><p class="text-slate-600 mt-1">Simpan sebagai draf kapan saja. Guru mengkurasi sebelum karyamu tayang.</p>
+  <form id="wf" onsubmit="return false" class="bg-white rounded-2xl p-6 shadow-sm mt-6 space-y-3">
+    <input id="w-t" class="inp" placeholder="Judul karya" required maxlength="80">
+    <select id="w-c" class="inp">${CATS.slice(1).map(c=>`<option>${c}</option>`).join('')}</select>
+    <textarea id="w-x" class="inp min-h-[180px]" placeholder="Mulai menulis di sini..." required></textarea>
+    <div class="flex gap-2 flex-wrap"><button onclick="saveWork('menunggu')" class="btn">Kirim ke guru</button><button onclick="saveWork('draf')" class="px-5 rounded-xl border-2 border-slate-200 font-bold hover:bg-slate-50">Simpan draf</button><span id="editing" class="text-xs text-slate-500 self-center"></span></div></form>
+  <h3 class="font-extrabold text-xl mt-8">Karyaku</h3><div class="mt-3 space-y-3">`+(mine.map(w=>`<div class="bg-white rounded-xl p-4 shadow-sm"><div class="flex justify-between items-center gap-3"><div><b>${esc(w.title)}</b><p class="text-xs text-slate-500">${w.category}</p></div><div class="flex items-center gap-2"><span class="text-xs font-bold px-3 py-1 rounded-full ${col[w.status]}">${lab[w.status]}</span>${['draf','revisi'].includes(w.status)?`<button onclick="editW(${w.id})" class="text-sm font-bold text-ct-orange">Edit</button>`:''}</div></div>${w.status==='revisi'&&w.feedback?`<p class="mt-3 text-sm bg-red-50 text-red-800 rounded-lg p-3"><b>Catatan guru:</b> ${esc(w.feedback)}</p>`:''}</div>`).join('')||'<p class="text-slate-500 text-sm">Belum ada karya. Ceritamu dimulai dari kotak di atas.</p>')+'</div>';
+  eid=null;icons();
 }
-function saveWork(e){e.preventDefault();works.unshift({id:Date.now(),t:$('w-t').value.trim(),c:$('w-c').value,x:$('w-x').value.trim(),a:me.name,s:me.school||'-',uid:me.email,status:'menunggu'});db.set('ct_works',works);toast('Karya terkirim ke guru untuk dikurasi');renderKarya();return false}
-function curate(id,st){const w=works.find(x=>x.id===id);w.status=st;db.set('ct_works',works);toast(st==='disetujui'?'Karya ditayangkan di Pojok Baca':'Permintaan revisi dikirim');renderKarya()}
-
-/* ============ RANKING ============ */
-function renderRank(){
-  const mine=me&&me.role==='siswa'?[[me.name,me.school||'-',works.filter(w=>w.uid===me.email&&w.status==='disetujui').length*100,true]]:[];
-  const rows=[...RANK,...mine].sort((a,b)=>b[2]-a[2]);
-  $('rank').innerHTML=rows.map((r,i)=>`<div class="flex items-center gap-4 p-4 ${r[3]?'bg-orange-50':''}"><span class="w-8 text-center font-extrabold ${i<3?'text-ct-orange':'text-slate-400'}">${i+1}</span><div class="flex-1"><b>${esc(r[0])}${r[3]?' (kamu)':''}</b><p class="text-xs text-slate-500">${esc(r[1])}</p></div><b>${r[2]} poin</b></div>`).join('');
+function editW(id){const w=_mine.find(x=>x.id===id);eid=id;$('w-t').value=w.title;$('w-c').value=w.category;$('w-x').value=w.body;$('editing').textContent='Mengedit: '+w.title;scrollTo({top:0,behavior:'smooth'})}
+async function saveWork(st){
+  if(!$('wf').reportValidity())return; if(st==='menunggu'&&$('w-x').value.trim().length<40)return toast('Tulisan minimal 40 karakter sebelum dikirim.');
+  const rec={title:$('w-t').value.trim(),category:$('w-c').value,body:$('w-x').value.trim(),status:st,feedback:null,updated_at:new Date().toISOString()};
+  const{error}=eid?await sb.from('works').update(rec).eq('id',eid):await sb.from('works').insert({...rec,author_id:me.id,school_id:me.school_id,author_name:me.name,school_name:me.school});
+  if(error)return toast('Gagal menyimpan: '+error.message);
+  toast(st==='draf'?'Draf tersimpan':'Karya terkirim ke guru');renderKarya();
+}
+async function curate(id,st){
+  const fb=$('fb-'+id).value.trim(); if(st==='revisi'&&!fb)return toast('Tulis catatan agar siswa tahu apa yang diperbaiki.');
+  const{error}=await sb.from('works').update({status:st,feedback:fb||null,reviewed_by:me.id}).eq('id',id);
+  if(error)return toast('Gagal: '+error.message);
+  renderStories.dirty=true;toast(st==='disetujui'?'Karya ditayangkan':'Revisi dikirim ke siswa');renderKarya();
 }
 
-/* ============ AUTH ============ */
+/* ============ RANKING & ADMIN ============ */
+async function renderRank(){
+  if(!sb){$('rank').innerHTML=noSB();return}
+  const{data:r=[]}=await sb.from('ranking').select('*');
+  $('rank').innerHTML=r.map((x,i)=>`<div class="flex items-center gap-4 p-4"><span class="w-8 text-center font-extrabold ${i<3?'text-ct-orange':'text-slate-400'}">${i+1}</span><div class="flex-1"><b>${esc(x.author_name)}</b><p class="text-xs text-slate-500">${esc(x.school_name)}</p></div><b>${x.poin} poin</b></div>`).join('')||'<p class="p-6 text-slate-500">Belum ada penulis di peringkat. Karya yang disetujui guru akan menambah poin.</p>';
+}
+async function renderAdmin(){
+  const el=$('tab-admin');if(me?.role!=='admin'){el.innerHTML='';return}
+  const{data:g=[]}=await sb.from('profiles').select('*,schools(name)').eq('role','guru').order('verified').order('created_at',{ascending:false});
+  el.innerHTML=`<h2 class="text-3xl font-extrabold">Verifikasi Guru</h2><p class="text-slate-600 mt-1">Setujui hanya guru yang sudah kamu pastikan identitasnya.</p><div class="mt-6 bg-white rounded-2xl shadow-sm divide-y">`+
+  (g.map(u=>`<div class="p-4 flex items-center gap-3"><div class="flex-1"><b>${esc(u.name)}</b><p class="text-xs text-slate-500">${esc(u.email)} &middot; ${esc(u.schools?.name)} &middot; NIP ${esc(u.ident||'-')}</p></div>${u.verified?'<span class="text-xs font-bold text-emerald-700">Terverifikasi</span>':`<button onclick="verifyGuru('${u.id}')" class="btn py-2 text-sm">Verifikasi</button>`}</div>`).join('')||'<p class="p-6 text-slate-500">Belum ada guru terdaftar.</p>')+'</div>';
+}
+async function verifyGuru(id){const{error}=await sb.from('profiles').update({verified:true}).eq('id',id);toast(error?error.message:'Guru terverifikasi');renderAdmin()}
+
+/* ============ AUTH (Supabase) ============ */
+async function loadSchools(){if(schools.length||!sb)return;const{data}=await sb.from('schools').select('*').order('name');schools=data||[];$('f-school').innerHTML='<option value="">Pilih asal sekolah</option>'+schools.map(s=>`<option value="${s.id}">${esc(s.name)}</option>`).join('')}
+async function loadMe(){
+  if(!sb)return; const{data:{session}}=await sb.auth.getSession(); if(!session){me=null;return}
+  const{data}=await sb.from('profiles').select('*,schools(name)').eq('id',session.user.id).maybeSingle();
+  me=data?{...data,school:data.schools?.name}:null;
+  if(!data)openAuth('register',{name:session.user.user_metadata.full_name||'',email:session.user.email});
+}
 function openAuth(m,g){
-  mode=m;gProfile=g||null;
-  const reg=m!=='login', done=!!g;
+  if(!sb){toast('Backend belum dikonfigurasi (lihat SUPABASE_URL di script).');return}
+  mode=m;gProfile=g||null;const reg=m!=='login',done=!!g;
   $('auth-title').textContent=done?'Lengkapi profilmu':reg?'Daftar akun CERITAKU':'Masuk ke CERITAKU';
   $('auth-sub').textContent=done?'Satu langkah lagi: pilih peran dan asal sekolahmu.':reg?'Pilih peran agar fitur yang tampil sesuai kebutuhanmu.':'Lanjutkan menulis dan membaca ceritamu.';
-  $('role-box').classList.toggle('hidden',!reg); $('reg-extra').classList.toggle('hidden',!reg); $('f-name').classList.toggle('hidden',!reg);
-  $('f-pass').classList.toggle('hidden',done); $('f-pass').required=!done; $('f-email').readOnly=done;
-  $('google-area').classList.toggle('hidden',done);
+  ['role-box','reg-extra','f-name'].forEach(i=>$(i).classList.toggle('hidden',!reg));
+  $('f-pass').classList.toggle('hidden',done);$('f-pass').required=!done;$('f-email').readOnly=done;
   $('auth-submit').textContent=done?'Simpan & masuk':reg?'Daftar':'Masuk';
   $('auth-switch').innerHTML=done?'':reg?'Sudah punya akun? <button class="font-bold text-ct-orange" onclick="openAuth(\'login\')">Masuk</button>':'Belum punya akun? <button class="font-bold text-ct-orange" onclick="openAuth(\'register\')">Daftar sekarang</button>';
-  $('gtext').textContent=reg?'Daftar dengan Google':'Masuk dengan Google';
-  $('demo-box').classList.add('hidden'); $('auth-err').classList.add('hidden');
-  if(done){$('f-name').value=g.name;$('f-email').value=g.email}
-  $('auth-modal').classList.remove('hidden'); roleUI(); icons(); initGoogle();
+  $('auth-err').classList.add('hidden');if(done){$('f-name').value=g.name;$('f-email').value=g.email}
+  $('auth-modal').classList.remove('hidden');roleUI();loadSchools();icons();
 }
-function roleUI(){const g=document.querySelector('[name=role]:checked').value==='guru';$('f-id').placeholder=g?'NIP (opsional)':'NISN';}
+function roleUI(){const g=document.querySelector('[name=role]:checked').value==='guru';$('f-id').placeholder=g?'NIP (untuk verifikasi admin)':'NISN'}
 function authErr(m){const e=$('auth-err');e.textContent=m;e.classList.remove('hidden')}
 async function submitAuth(e){
-  e.preventDefault(); const email=$('f-email').value.trim().toLowerCase();
-  if(mode==='login'){
-    const u=users[email]; if(!u||u.provider==='google'&&!u.pass){return authErr(u?'Akun ini terdaftar lewat Google. Gunakan tombol Google.':'Email belum terdaftar. Daftar dulu.')}
-    if(u.pass!==await hash($('f-pass').value))return authErr('Kata sandi salah.');
-    return startSession(u);
-  }
-  const name=$('f-name').value.trim(); if(!name)return authErr('Nama lengkap wajib diisi.');
-  const role=document.querySelector('[name=role]:checked').value;
-  if(!$('f-school').value.trim())return authErr('Asal sekolah wajib diisi.');
-  if(!gProfile&&users[email])return authErr('Email sudah terdaftar. Silakan masuk.');
-  const u={name,email,role,school:$('f-school').value.trim(),ident:$('f-id').value.trim(),provider:gProfile?'google':'email',pass:gProfile?'':await hash($('f-pass').value)};
-  users[email]=u; db.set('ct_users',users); startSession(u,true);
+  e.preventDefault();const email=$('f-email').value.trim().toLowerCase();
+  if(mode==='login'){const{error}=await sb.auth.signInWithPassword({email,password:$('f-pass').value});if(error)return authErr('Email atau kata sandi salah.');return afterAuth()}
+  const name=$('f-name').value.trim(),role=document.querySelector('[name=role]:checked').value,sid=$('f-school').value,ident=$('f-id').value.trim();
+  if(!name)return authErr('Nama lengkap wajib diisi.');if(!sid)return authErr('Pilih asal sekolah.');
+  if(gProfile){const{data:{session}}=await sb.auth.getSession();const{error}=await sb.from('profiles').insert({id:session.user.id,email,name,role,school_id:+sid,ident,verified:role==='siswa'});if(error)return authErr(error.message);return afterAuth(true)}
+  const{data,error}=await sb.auth.signUp({email,password:$('f-pass').value,options:{data:{name,role,school_id:sid,ident}}});
+  if(error)return authErr(error.message);
+  if(!data.session){closeModal('auth-modal');return toast('Cek emailmu untuk konfirmasi, lalu masuk.')}
+  afterAuth(true);
 }
-function startSession(u,isNew){
-  me=u; db.set('ct_session',u.email); closeModal('auth-modal'); renderAuthArea();
-  toast((isNew?'Selamat datang, ':'Halo lagi, ')+u.name.split(' ')[0]+'! Kamu masuk sebagai '+(u.role==='guru'?'Guru':'Siswa')+'.'); switchTab(tab);
+async function afterAuth(isNew){
+  closeModal('auth-modal');await loadMe();renderAuthArea();
+  if(me)toast((isNew?'Selamat datang, ':'Halo lagi, ')+me.name.split(' ')[0]+'! Peranmu: '+me.role+(me.role==='guru'&&!me.verified?' (menunggu verifikasi admin)':'')+'.');
+  route();
 }
-function logout(){me=null;db.set('ct_session','');renderAuthArea();toast('Kamu sudah keluar');switchTab(tab==='pojok-karya'?'beranda':tab)}
-
-/* ---- Google ---- */
-function initGoogle(){
-  const real=!!GOOGLE_CLIENT_ID;
-  $('gdemo').classList.toggle('hidden',real); $('gbtn').classList.toggle('hidden',!real);
-  if(!real)return;
-  if(!window.google||!google.accounts){setTimeout(initGoogle,400);return}
-  google.accounts.id.initialize({client_id:GOOGLE_CLIENT_ID,callback:r=>{try{const p=JSON.parse(decodeURIComponent(escape(atob(r.credential.split('.')[1].replace(/-/g,'+').replace(/_/g,'/')))));googleLogin(p.name||p.email,p.email)}catch{authErr('Login Google gagal. Coba lagi.')}}});
-  google.accounts.id.renderButton($('gbtn'),{theme:'outline',size:'large',width:340,text:mode==='login'?'signin_with':'signup_with',locale:'id'});
-}
-function googleDemo(){$('demo-box').classList.remove('hidden');$('d-email').focus()}
-function googleDemoGo(){const em=$('d-email').value.trim();if(!/^\S+@\S+\.\S+$/.test(em))return authErr('Masukkan email Google yang valid.');googleLogin($('d-name').value.trim()||em.split('@')[0],em)}
-/* NOTE produksi: ID token Google HARUS diverifikasi di server sebelum dipercaya. */
-function googleLogin(name,email){
-  email=email.toLowerCase(); const u=users[email];
-  if(u)return startSession(u);
-  openAuth('register',{name,email}); // akun baru: wajib pilih Siswa/Guru
-}
+async function logout(){await sb.auth.signOut();me=null;renderAuthArea();toast('Kamu sudah keluar');location.hash='/beranda';route()}
 
 /* ============ INIT ============ */
 document.addEventListener('keydown',e=>{if(e.key==='Escape'){closeModal('auth-modal');closeModal('read-modal')}});
-renderAuthArea(); switchTab('beranda');
+addEventListener('hashchange',route);
+(async()=>{await loadMe();renderAuthArea();route()})();
 </script>
 </body>
 </html>
