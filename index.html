@@ -66,9 +66,9 @@ body{background:#FBF8F4}
           <button onclick="switchTab('pojok-baca')" class="flex items-center gap-2 px-6 py-3.5 rounded-xl bg-white/60 border-2 border-ct-peach font-bold hover:bg-white transition"><i data-lucide="book-open" class="w-5 h-5 text-ct-orange"></i>Jelajahi Karya</button>
         </div>
         <div class="mt-8 grid grid-cols-3 gap-3 max-w-md">
-          <div class="rounded-xl bg-ct-peach p-3 text-center"><i data-lucide="book-text" class="w-5 h-5 inline text-ct-orange"></i><b class="text-xl ml-1">1.200+</b><div class="text-sm">Cerita Ditulis</div></div>
-          <div class="rounded-xl bg-ct-teal p-3 text-center"><i data-lucide="school" class="w-5 h-5 inline text-teal-800"></i><b class="text-xl ml-1">80+</b><div class="text-sm">SMA Bergabung</div></div>
-          <div class="rounded-xl bg-ct-sun p-3 text-center"><i data-lucide="trophy" class="w-5 h-5 inline text-amber-600"></i><b class="text-xl ml-1">25+</b><div class="text-sm">Antologi Terbit</div></div>
+          <div class="rounded-xl bg-ct-peach p-3 text-center"><i data-lucide="book-text" class="w-5 h-5 inline text-ct-orange"></i><b id="st-cerita" class="text-xl ml-1">–</b><div class="text-sm">Cerita Tayang</div></div>
+          <div class="rounded-xl bg-ct-teal p-3 text-center"><i data-lucide="school" class="w-5 h-5 inline text-teal-800"></i><b id="st-sekolah" class="text-xl ml-1">–</b><div class="text-sm">SMA Bergabung</div></div>
+          <div class="rounded-xl bg-ct-sun p-3 text-center"><i data-lucide="eye" class="w-5 h-5 inline text-amber-600"></i><b id="st-baca" class="text-xl ml-1">–</b><div class="text-sm">Kali Dibaca</div></div>
         </div>
       </div>
       <div class="lg:col-span-6 relative lg:self-center lg:py-14">
@@ -189,17 +189,17 @@ body{background:#FBF8F4}
         <div class="bg-white rounded-3xl p-5 border border-slate-200 shadow-sm flex flex-col justify-between space-y-4">
           <div class="h-44 bg-gradient-to-tr from-sky-800 to-indigo-600 rounded-2xl flex items-center justify-center text-white p-4"><div class="text-center"><p class="text-[10px] font-bold text-sky-200">ANTOLOGI TANAH DATAR</p><h4 class="text-base font-extrabold mt-1">Jilid 2</h4><p class="text-[11px] text-sky-100 mt-1">Kisah di Ranah Minang</p></div></div>
           <div><h4 class="font-bold text-center">Antologi Ceritaku Tanah Datar Jilid 2</h4><p class="text-xs text-slate-500 text-center mt-1">Jilid 2 &bull; 18 Cerita</p><p class="text-[10px] text-slate-400 text-center mt-0.5">ISBN: 978-623-XXXX-13-2</p></div>
-          <div class="pt-3 border-t border-slate-100 flex items-center justify-between text-[11px]"><span class="text-slate-500"><i data-lucide="eye" class="w-3.5 h-3.5 inline"></i> 2.190 Pembaca</span><span class="px-2 py-0.5 bg-emerald-100 text-emerald-800 font-bold rounded text-[10px]">Tersedia PDF</span></div>
+          <div class="pt-3 border-t border-slate-100 flex items-center justify-between text-[11px]"><span class="text-slate-400">Statistik baca segera hadir</span><span class="px-2 py-0.5 bg-emerald-100 text-emerald-800 font-bold rounded text-[10px]">Tersedia PDF</span></div>
         </div>
         <div class="bg-white rounded-3xl p-5 border border-slate-200 shadow-sm flex flex-col justify-between space-y-4">
           <div class="h-44 bg-gradient-to-tr from-emerald-800 to-teal-600 rounded-2xl flex items-center justify-center text-white p-4"><div class="text-center"><p class="text-[10px] font-bold text-emerald-200">ANTOLOGI TANAH DATAR</p><h4 class="text-base font-extrabold mt-1">Jilid 3</h4><p class="text-[11px] text-emerald-100 mt-1">Inovasi Literasi Remaja</p></div></div>
           <div><h4 class="font-bold text-center">Antologi Ceritaku Tanah Datar Jilid 3</h4><p class="text-xs text-slate-500 text-center mt-1">Jilid 3 &bull; 20 Cerita</p><p class="text-[10px] text-slate-400 text-center mt-0.5">ISBN: 978-623-XXXX-14-9</p></div>
-          <div class="pt-3 border-t border-slate-100 flex items-center justify-between text-[11px]"><span class="text-slate-500"><i data-lucide="eye" class="w-3.5 h-3.5 inline"></i> 1.850 Pembaca</span><span class="px-2 py-0.5 bg-sky-100 text-sky-800 font-bold rounded text-[10px]">Baru Rilis</span></div>
+          <div class="pt-3 border-t border-slate-100 flex items-center justify-between text-[11px]"><span class="text-slate-400">Statistik baca segera hadir</span><span class="px-2 py-0.5 bg-sky-100 text-sky-800 font-bold rounded text-[10px]">Baru Rilis</span></div>
         </div>
         <div class="bg-white rounded-3xl p-5 border border-slate-200 shadow-sm flex flex-col justify-between space-y-4">
           <div class="h-44 bg-gradient-to-tr from-amber-800 to-red-700 rounded-2xl flex items-center justify-center text-white p-4"><div class="text-center"><p class="text-[10px] font-bold text-amber-200">EDISI KHUSUS</p><h4 class="text-base font-extrabold mt-1">Warisan Budaya</h4><p class="text-[11px] text-amber-100 mt-1">Legenda Marapi &amp; Singkarak</p></div></div>
           <div><h4 class="font-bold text-center">Antologi Ceritaku - Edisi Khusus</h4><p class="text-xs text-slate-500 text-center mt-1">Edisi Khusus &bull; 15 Cerita</p><p class="text-[10px] text-slate-400 text-center mt-0.5">ISBN: 978-623-XXXX-10-1</p></div>
-          <div class="pt-3 border-t border-slate-100 flex items-center justify-between text-[11px]"><span class="text-slate-500"><i data-lucide="eye" class="w-3.5 h-3.5 inline"></i> 1.120 Pembaca</span><span class="px-2 py-0.5 bg-amber-100 text-amber-800 font-bold rounded text-[10px]">Arsip</span></div>
+          <div class="pt-3 border-t border-slate-100 flex items-center justify-between text-[11px]"><span class="text-slate-400">Statistik baca segera hadir</span><span class="px-2 py-0.5 bg-amber-100 text-amber-800 font-bold rounded text-[10px]">Arsip</span></div>
         </div>
       </div>
     </div>
@@ -221,7 +221,7 @@ body{background:#FBF8F4}
 <!-- RANKING -->
 <section id="tab-ranking" class="hidden py-10 max-w-3xl mx-auto px-4 sm:px-6 lg:px-8">
   <h2 class="text-3xl font-extrabold">Ranking Penulis</h2>
-  <p class="text-slate-600 mt-1">Poin dari karya yang disetujui guru dan dibaca pembaca lain.</p>
+  <p class="text-slate-600 mt-1">Setiap karya yang disetujui guru bernilai 100 poin.</p>
   <div id="rank" class="mt-6 bg-white rounded-2xl shadow-sm divide-y"></div>
 </section>
 </main>
@@ -293,7 +293,7 @@ function switchTab(t,fromRoute){
   tab=t; document.querySelectorAll('main>section').forEach(s=>s.classList.toggle('hidden',s.id!=='tab-'+t));
   const h=TABS().map(([k,l])=>`<button onclick="switchTab('${k}')" class="navlink ${k===t?'on':''}" ${k===t?'aria-current="page"':''}>${l}</button>`).join('');
   $('nav-desktop').innerHTML=h;$('nav-mobile').innerHTML=h;
-  ({'pojok-baca':renderStories,'pojok-karya':renderKarya,ranking:renderRank,admin:renderAdmin})[t]?.();
+  ({beranda:loadStats,'pojok-baca':renderStories,'pojok-karya':renderKarya,ranking:renderRank,admin:renderAdmin})[t]?.();
   scrollTo({top:0});icons();
 }
 function route(){
@@ -311,21 +311,39 @@ function renderAuthArea(){
     <button onclick="openAuth('register')" class="btn px-4 sm:px-5 py-2.5 text-sm sm:text-base">Daftar</button>`;
 }
 
+/* ============ STATISTIK BERANDA (data nyata dari database) ============ */
+async function loadStats(){
+  if(!sb)return;
+  try{
+    const{data,error}=await sb.rpc('site_stats'); if(error||!data)return;
+    const f=n=>Number(n||0).toLocaleString('id-ID');
+    $('st-cerita').textContent=f(data.cerita);$('st-sekolah').textContent=f(data.sekolah);$('st-baca').textContent=f(data.dibaca);
+  }catch(e){}
+}
+
 /* ============ POJOK BACA ============ */
 async function renderStories(){
   $('filters').innerHTML=CATS.map(c=>`<button onclick="cat='${c}';renderStories()" class="px-4 py-2 rounded-xl text-xs font-bold ${c===cat?'bg-ct-orange text-white':'bg-white border border-slate-200 text-slate-600 hover:bg-slate-50'}">${c}</button>`).join('');
   if(!sb){$('stories').innerHTML=noSB();return}
-  if(!pub.length||renderStories.dirty){const{data}=await sb.from('works').select('id,title,category,author_name,school_name').eq('status','disetujui').order('created_at',{ascending:false});pub=data||[];renderStories.dirty=false}
+  if(!pub.length||renderStories.dirty){const{data}=await sb.from('works').select('id,title,category,author_name,school_name,views').eq('status','disetujui').order('created_at',{ascending:false});pub=data||[];renderStories.dirty=false}
   const q=$('q').value.toLowerCase(),list=pub.filter(w=>(cat==='Semua'||w.category===cat)&&(w.title+w.author_name+w.school_name).toLowerCase().includes(q));
   $('stories').innerHTML=list.map((w,i)=>`<div class="bg-white rounded-2xl overflow-hidden shadow-sm flex flex-col">
     <div class="h-40 relative flex items-center justify-center ${['bg-ct-peach','bg-ct-teal/50','bg-ct-sun/70'][i%3]}"><i data-lucide="${w.category==='Puisi'?'feather':'book-open-text'}" class="w-12 h-12 text-navy/40"></i><span class="absolute top-3 right-3 px-3 py-1 bg-ct-orange text-white text-[10px] font-bold rounded-full">${w.category}</span></div>
     <div class="p-5"><h3 class="text-lg font-bold"><a href="#/baca/${w.id}" class="hover:text-ct-orange">${esc(w.title)}</a></h3>
-    <p class="text-xs text-slate-500 mt-1">oleh <b class="text-slate-700">${esc(w.author_name)}</b> &middot; ${esc(w.school_name)}</p></div></div>`).join('')||'<p class="text-slate-500 col-span-full">Belum ada karya yang tayang. Jadilah penulis pertama.</p>';
+    <p class="text-xs text-slate-500 mt-1">oleh <b class="text-slate-700">${esc(w.author_name)}</b> &middot; ${esc(w.school_name)}</p>
+    <p class="text-xs text-slate-400 mt-2 flex items-center gap-1"><i data-lucide="eye" class="w-3.5 h-3.5"></i>${(w.views||0).toLocaleString('id-ID')} kali dibaca</p></div></div>`).join('')||'<p class="text-slate-500 col-span-full">Belum ada karya yang tayang. Jadilah penulis pertama.</p>';
   icons();
+}
+async function countView(id){
+  try{if(localStorage.getItem('ct_v_'+id))return false}catch(e){}
+  const{error}=await sb.rpc('increment_view',{p_id:+id}); if(error)return false;
+  try{localStorage.setItem('ct_v_'+id,'1')}catch(e){}
+  renderStories.dirty=true;return true;
 }
 async function readStory(id){
   const{data:w}=await sb.from('works').select('*').eq('id',id).maybeSingle(); if(!w)return toast('Karya tidak ditemukan');
-  $('r-cat').textContent=w.category;$('r-title').textContent=w.title;$('r-by').textContent='oleh '+w.author_name+' · '+w.school_name;
+  const counted=w.status==='disetujui'&&await countView(id), n=(w.views||0)+(counted?1:0);
+  $('r-cat').textContent=w.category;$('r-title').textContent=w.title;$('r-by').textContent='oleh '+w.author_name+' · '+w.school_name+(w.status==='disetujui'?' · '+n.toLocaleString('id-ID')+' kali dibaca':'');
   $('r-body').innerHTML=w.body.split('\n\n').map(p=>`<p>${esc(p).replace(/\n/g,'<br>')}</p>`).join('');
   $('read-modal').classList.remove('hidden');
 }
