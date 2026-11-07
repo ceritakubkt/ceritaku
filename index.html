@@ -395,16 +395,17 @@ async function renderKarya(){
   if(me.role==='admin'){msg('shield-check','Kamu admin','Kelola verifikasi guru di tab Admin.');return icons()}
   if(me.role==='guru'){
     if(!me.verified){msg('hourglass','Menunggu verifikasi admin','Akun gurumu aktif setelah admin memverifikasi. Kamu bisa membaca karya seperti biasa.');return icons()}
-    const{data:q=[]}=await sb.from('works').select('*').eq('status','menunggu').order('created_at');
+    const{data:sc}=await sb.from('super_curators').select('user_id').eq('user_id',me.id).maybeSingle(), allSchools=!!sc;
+     const{data:q=[]}=await sb.from('works').select('*').eq('status','menunggu').order('created_at');
     el.innerHTML=`<div class="space-y-6">
     <div class="bg-amber-900 text-white rounded-3xl p-6 sm:p-8 shadow-lg relative overflow-hidden">
-      <span class="px-3 py-1 rounded-md bg-amber-700 text-amber-200 text-xs font-bold">Dasbor Guru &amp; Validator</span>
+      <span class="px-3 py-1 rounded-md bg-amber-700 text-amber-200 text-xs font-bold">${allSchools?'Dasbor Kurator Pusat · Semua Sekolah':'Dasbor Guru &amp; Validator'}</span>
       <h2 class="text-2xl sm:text-3xl font-extrabold mt-2">Kurasi Karya</h2>
-      <p class="text-xs text-amber-200 mt-1">${q.length} karya dari ${esc(me.school)} menunggu penilaianmu.</p>
+      <p class="text-xs text-amber-200 mt-1">${q.length} karya dari ${allSchools?'semua sekolah':esc(me.school)} menunggu penilaianmu.</p>
     </div>
     <div class="space-y-4">`+
     (q.map(w=>`<div class="bg-white rounded-3xl p-6 border border-slate-200 shadow-sm">
-      <div class="flex flex-wrap items-start justify-between gap-2"><div><b class="text-lg">${esc(w.title)}</b><p class="text-xs text-slate-500 mt-0.5">${esc(w.author_name)}</p></div><span class="px-2.5 py-1 bg-sky-100 text-sky-800 rounded-lg font-bold text-xs">${esc(w.category)}</span></div>
+      <div class="flex flex-wrap items-start justify-between gap-2"><div><b class="text-lg">${esc(w.title)}</b><p class="text-xs text-slate-500 mt-0.5">${esc(w.author_name)} · ${esc(w.school_name||'')}</p></div><span class="px-2.5 py-1 bg-sky-100 text-sky-800 rounded-lg font-bold text-xs">${esc(w.category)}</span></div>
       <p class="text-sm text-slate-700 mt-4 whitespace-pre-line leading-relaxed bg-slate-50 border border-slate-100 rounded-xl p-4">${esc(w.body)}</p>
       <label class="block text-xs font-bold text-slate-700 mt-4 mb-1" for="fb-${w.id}">Umpan balik guru</label>
       <textarea id="fb-${w.id}" class="inp" rows="2" placeholder="Catatan untuk siswa (wajib jika minta revisi)"></textarea>
