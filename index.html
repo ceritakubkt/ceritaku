@@ -2,7 +2,13 @@
 <html lang="id" class="scroll-smooth">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#ffffff">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-title" content="CERITAKU">
+<meta name="apple-mobile-web-app-status-bar-style" content="default">
+<meta name="format-detection" content="telephone=no">
 <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg width=%2252%22 height=%2252%22 viewBox=%220 0 56 56%22 fill=%22none%22 xmlns=%22http://www.w3.org/2000/svg%22%3E %3Cdefs%3E%3ClinearGradient id=%22lg1%22 x1=%226%22 y1=%222%22 x2=%2250%22 y2=%2254%22 gradientUnits=%22userSpaceOnUse%22%3E%3Cstop stop-color=%22%23F58B3C%22/%3E%3Cstop offset=%221%22 stop-color=%22%23E25A10%22/%3E%3C/linearGradient%3E%3C/defs%3E %3Crect width=%2256%22 height=%2256%22 rx=%2216%22 fill=%22url%28%23lg1%29%22/%3E %3Cpath d=%22M0 0h56v56H0z%22 fill=%22none%22/%3E %3Cpath d=%22M28 6 33 11 28 16 23 11Z%22 fill=%22%23FBE08A%22 opacity=%22.0%22/%3E %3Cpath d=%22M9 33C17 30.5 19.5 22 21 9c1.6 8.5 3.8 13.2 7 14.6C31.2 22.2 33.4 17.5 35 9c1.5 13 4 21.5 12 24-6.5-1.8-12.500-3.200-19-3.200S15.500 31.200 9 33Z%22 fill=%22%2314213D%22/%3E %3Ccircle cx=%2228%22 cy=%2217.500%22 r=%222.600%22 fill=%22%23FBE08A%22/%3E %3Cpath d=%22M8 38.500c7-3.600 14-3.200 20 1.500 6-4.700 13-5.100 20-1.500V48c-7-3.600-14-3.200-20 1.500C22 44.800 15 44.400 8 48Z%22 fill=%22%23fff%22/%3E %3Cpath d=%22M28 40v9.500%22 stroke=%22%23EA6A1F%22 stroke-width=%222%22 stroke-linecap=%22round%22/%3E %3Cpath d=%22M13.500 42.500c4-1.300 8-.8 11 1.200M42.500 42.500c-4-1.300-8-.8-11 1.200%22 stroke=%22%23F3B98A%22 stroke-width=%221.600%22 stroke-linecap=%22round%22/%3E %3C/svg%3E">
 <title>CERITAKU - Platform Literasi Digital Tanah Datar</title>
 <script src="https://cdn.tailwindcss.com"></script>
@@ -23,15 +29,85 @@ body{background:#FBF8F4}
 .btn{background:#EA6A1F;color:#fff;font-weight:700;border-radius:.75rem;padding:.7rem 1.2rem;transition:.15s}.btn:hover{background:#d65a12}
 :focus-visible{outline:2px solid #EA6A1F;outline-offset:2px}
 @media (prefers-reduced-motion:reduce){*{transition:none!important}}
+
+/* ===== RESPONSIF & TAMPILAN PONSEL (Android / iOS) ===== */
+html{-webkit-text-size-adjust:100%;text-size-adjust:100%}
+body{-webkit-tap-highlight-color:transparent;overflow-x:hidden;
+  padding-left:env(safe-area-inset-left);padding-right:env(safe-area-inset-right)}
+button,a,select,input,textarea{touch-action:manipulation}
+header{padding-top:env(safe-area-inset-top)}
+body:has(#auth-modal:not(.hidden)),body:has(#read-modal:not(.hidden)){overflow:hidden}
+
+/* Bar navigasi bawah (hanya < 1024px) */
+.tabbar{position:fixed;left:0;right:0;bottom:0;z-index:40;background:rgba(255,255,255,.97);
+  -webkit-backdrop-filter:saturate(180%) blur(14px);backdrop-filter:saturate(180%) blur(14px);
+  border-top:1px solid #E2E8F0;padding:0 env(safe-area-inset-right) env(safe-area-inset-bottom) env(safe-area-inset-left)}
+.tabbtn{flex:1 1 0;min-width:0;min-height:58px;display:flex;flex-direction:column;align-items:center;justify-content:center;
+  gap:3px;font-size:11px;font-weight:600;color:#64748b;position:relative;transition:color .15s}
+.tabbtn svg{width:24px;height:24px}
+.tabbtn.on{color:#EA6A1F}
+.tabbtn.on::before{content:"";position:absolute;top:0;left:30%;right:30%;height:3px;border-radius:0 0 3px 3px;background:#EA6A1F}
+.tabbtn:active{background:#FFF4EA}
+
+@media (max-width:1023px){
+  body{padding-bottom:calc(66px + env(safe-area-inset-bottom))}
+  input.inp,select.inp,textarea.inp{font-size:16px}           /* cegah zoom otomatis iOS */
+  input.inp,select.inp{min-height:46px}
+  #toast{bottom:calc(78px + env(safe-area-inset-bottom))!important;max-width:calc(100vw - 2rem);width:max-content;text-align:center}
+}
+
+@media (max-width:639px){
+  main button{min-height:40px}
+  .btn{min-height:44px}
+
+  /* Chip filter: geser horizontal */
+  #filters{flex-wrap:nowrap!important;overflow-x:auto;margin-left:-1rem;margin-right:-1rem;padding:0 1rem 4px;
+    scrollbar-width:none;-webkit-overflow-scrolling:touch}
+  #filters::-webkit-scrollbar{display:none}
+  #filters button{flex-shrink:0;white-space:nowrap;min-height:40px}
+
+  /* Modal jadi bottom-sheet */
+  .overlay{padding:0!important}
+  .overlay:not(.hidden){display:flex;align-items:flex-end}
+  .sheet{width:100%;max-width:none!important;margin:0!important;border-radius:1.5rem 1.5rem 0 0!important;
+    max-height:92vh;max-height:92dvh;overflow-y:auto;overscroll-behavior:contain;
+    padding:.75rem 1.25rem calc(1.5rem + env(safe-area-inset-bottom))!important}
+  .sheet::before{content:"";display:block;width:40px;height:4px;border-radius:4px;background:#CBD5E1;margin:0 auto .9rem}
+  .overlay:not(.hidden) .sheet{animation:sheetUp .22s ease-out}
+  .sheet [aria-label="Tutup"]{top:.55rem!important;right:.55rem!important;width:44px;height:44px;
+    display:flex;align-items:center;justify-content:center;min-height:44px}
+  #r-title{font-size:1.5rem;line-height:1.3;padding-right:2rem}
+  #r-body{font-size:1.0625rem;line-height:1.75}
+
+  /* Tabel "Karya Saya" -> kartu */
+  .rt,.rt tbody,.rt tr,.rt td{display:block;width:100%}
+  .rt thead{display:none}
+  .rt tbody{border:0}
+  .rt tr{border:1px solid #E2E8F0!important;border-radius:1rem;padding:.5rem .9rem;margin-bottom:.75rem;background:#fff}
+  .rt td{display:flex;justify-content:space-between;align-items:center;gap:1rem;text-align:right;
+    padding:.4rem 0!important;font-size:13px}
+  .rt td::before{content:attr(data-l);font-weight:700;color:#64748b;text-align:left;flex-shrink:0}
+  .rt td:first-child{display:block;text-align:left;font-size:15px;padding:.35rem 0 .6rem!important;
+    border-bottom:1px solid #F1F5F9;margin-bottom:.25rem}
+  .rt td:first-child::before{display:none}
+  .rt td[colspan]{display:block;text-align:center}
+  .rt td[colspan]::before{display:none}
+  .rt td:last-child button{min-height:40px;padding:.5rem 1.4rem}
+}
+@keyframes sheetUp{from{transform:translateY(32px);opacity:.4}to{transform:none;opacity:1}}
+@media (prefers-reduced-motion:reduce){.overlay .sheet{animation:none!important}}
+
+/* Layar sangat sempit */
+@media (max-width:359px){.tabbtn{font-size:10px}}
 </style>
 </head>
 <body class="font-sans text-navy antialiased min-h-screen flex flex-col">
 
 <!-- HEADER -->
 <header class="sticky top-0 z-40 bg-white shadow-sm">
-  <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-20 flex items-center justify-between gap-4">
-    <button onclick="switchTab('beranda')" class="flex items-center gap-3 shrink-0" aria-label="CERITAKU beranda">
-      <svg width="52" height="52" viewBox="0 0 56 56" fill="none" aria-hidden="true" class="shrink-0 drop-shadow-sm">
+  <div class="max-w-7xl mx-auto px-3 sm:px-6 lg:px-8 h-14 sm:h-16 lg:h-20 flex items-center justify-between gap-2 sm:gap-4">
+    <button onclick="switchTab('beranda')" class="flex items-center gap-2 sm:gap-3 shrink-0" aria-label="CERITAKU beranda">
+      <svg width="52" height="52" viewBox="0 0 56 56" fill="none" aria-hidden="true" class="shrink-0 drop-shadow-sm w-9 h-9 sm:w-11 sm:h-11 lg:w-[52px] lg:h-[52px]">
         <defs><linearGradient id="lg1" x1="6" y1="2" x2="50" y2="54" gradientUnits="userSpaceOnUse"><stop stop-color="#F58B3C"/><stop offset="1" stop-color="#E25A10"/></linearGradient></defs>
         <rect width="56" height="56" rx="16" fill="url(#lg1)"/>
         <path d="M9 33C17 30.5 19.5 22 21 9c1.6 8.5 3.8 13.2 7 14.6C31.2 22.2 33.4 17.5 35 9c1.5 13 4 21.5 12 24-6.5-1.8-12.500-3.200-19-3.200S15.500 31.200 9 33Z" fill="#14213D"/>
@@ -40,13 +116,12 @@ body{background:#FBF8F4}
         <path d="M28 40v9.500" stroke="#EA6A1F" stroke-width="2" stroke-linecap="round"/>
         <path d="M13.500 42.500c4-1.300 8-.8 11 1.200M42.500 42.500c-4-1.300-8-.8-11 1.200" stroke="#F3B98A" stroke-width="1.600" stroke-linecap="round"/>
       </svg>
-      <span class="text-[28px] font-extrabold tracking-tight leading-none">CER<span class="text-ct-orange">i</span>TAKU</span>
+      <span class="text-[21px] sm:text-2xl lg:text-[28px] font-extrabold tracking-tight leading-none">CER<span class="text-ct-orange">i</span>TAKU</span>
       <span class="hidden xl:block border-l border-slate-300 pl-3 text-[11px] leading-tight text-slate-600 text-left">Cerita Karya<br>Anak Tanah Datar<br>Untukmu</span>
     </button>
     <nav id="nav-desktop" class="hidden lg:flex items-center gap-6"></nav>
-    <div id="auth-area" class="flex items-center gap-3"></div>
+    <div id="auth-area" class="flex items-center gap-2 sm:gap-3"></div>
   </div>
-  <nav id="nav-mobile" class="lg:hidden flex gap-5 overflow-x-auto px-4 pb-2 border-t border-slate-100 pt-2 text-sm"></nav>
 </header>
 
 <main class="flex-grow">
@@ -54,21 +129,21 @@ body{background:#FBF8F4}
 <!-- BERANDA -->
 <section id="tab-beranda">
   <div class="batik relative overflow-hidden">
-    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 grid lg:grid-cols-12 items-center gap-6 py-12 lg:py-0 lg:min-h-[600px]">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 grid lg:grid-cols-12 items-center gap-6 py-8 sm:py-12 lg:py-0 lg:min-h-[600px]">
       <div class="lg:col-span-6 relative z-10 lg:py-16">
         <div class="inline-flex items-center gap-2 px-4 py-2.5 rounded-2xl bg-ct-peach text-ct-orange text-sm font-bold leading-tight">
           <i data-lucide="library" class="w-6 h-6 shrink-0"></i><span>Platform Literasi Digital<br>Tanah Datar</span>
         </div>
-        <h1 class="mt-6 text-4xl md:text-5xl font-extrabold leading-[1.15] tracking-tight">Tulis Ceritamu, Terbitkan Bukumu, Harumkan Tanah Datar</h1>
+        <h1 class="mt-5 sm:mt-6 text-[1.9rem] sm:text-4xl md:text-5xl font-extrabold leading-[1.15] tracking-tight">Tulis Ceritamu, Terbitkan Bukumu, Harumkan Tanah Datar</h1>
         <p class="mt-5 max-w-xl text-slate-700 leading-relaxed">Bergabunglah dengan ribuan pelajar SMA di Tanah Datar untuk membaca, menulis, dan menerbitkan karya cerita secara digital. Bagikan kreativitasmu dan jadikan Tanah Datar lebih harum melalui tulisan.</p>
-        <div class="mt-7 flex flex-wrap gap-4">
-          <button onclick="switchTab('pojok-karya')" class="btn flex items-center gap-2 px-6 py-3.5"><i data-lucide="pencil" class="w-5 h-5"></i>Mulai Menulis Sekarang</button>
-          <button onclick="switchTab('pojok-baca')" class="flex items-center gap-2 px-6 py-3.5 rounded-xl bg-white/60 border-2 border-ct-peach font-bold hover:bg-white transition"><i data-lucide="book-open" class="w-5 h-5 text-ct-orange"></i>Jelajahi Karya</button>
+        <div class="mt-6 sm:mt-7 flex flex-wrap gap-3 sm:gap-4">
+          <button onclick="switchTab('pojok-karya')" class="btn flex w-full sm:w-auto justify-center items-center gap-2 px-6 py-3.5"><i data-lucide="pencil" class="w-5 h-5"></i>Mulai Menulis Sekarang</button>
+          <button onclick="switchTab('pojok-baca')" class="flex w-full sm:w-auto justify-center items-center gap-2 px-6 py-3.5 rounded-xl bg-white/60 border-2 border-ct-peach font-bold hover:bg-white transition"><i data-lucide="book-open" class="w-5 h-5 text-ct-orange"></i>Jelajahi Karya</button>
         </div>
         <div class="mt-8 grid grid-cols-3 gap-3 max-w-md">
-          <div class="rounded-xl bg-ct-peach p-3 text-center"><i data-lucide="book-text" class="w-5 h-5 inline text-ct-orange"></i><b id="st-cerita" class="text-xl ml-1">–</b><div class="text-sm">Cerita Tayang</div></div>
-          <div class="rounded-xl bg-ct-teal p-3 text-center"><i data-lucide="school" class="w-5 h-5 inline text-teal-800"></i><b id="st-sekolah" class="text-xl ml-1">–</b><div class="text-sm">SMA Bergabung</div></div>
-          <div class="rounded-xl bg-ct-sun p-3 text-center"><i data-lucide="eye" class="w-5 h-5 inline text-amber-600"></i><b id="st-baca" class="text-xl ml-1">–</b><div class="text-sm">Kali Dibaca</div></div>
+          <div class="rounded-xl bg-ct-peach p-3 text-center"><i data-lucide="book-text" class="w-5 h-5 inline text-ct-orange"></i><b id="st-cerita" class="text-lg sm:text-xl ml-1">–</b><div class="text-xs sm:text-sm leading-tight mt-0.5">Cerita Tayang</div></div>
+          <div class="rounded-xl bg-ct-teal p-3 text-center"><i data-lucide="school" class="w-5 h-5 inline text-teal-800"></i><b id="st-sekolah" class="text-lg sm:text-xl ml-1">–</b><div class="text-xs sm:text-sm leading-tight mt-0.5">SMA Bergabung</div></div>
+          <div class="rounded-xl bg-ct-sun p-3 text-center"><i data-lucide="eye" class="w-5 h-5 inline text-amber-600"></i><b id="st-baca" class="text-lg sm:text-xl ml-1">–</b><div class="text-xs sm:text-sm leading-tight mt-0.5">Kali Dibaca</div></div>
         </div>
       </div>
       <div class="lg:col-span-6 relative lg:self-center lg:py-14">
@@ -79,21 +154,21 @@ body{background:#FBF8F4}
 
   <div class="max-w-6xl mx-auto px-4 sm:px-6 -mt-2 lg:-mt-8 pb-16 relative z-10">
     <div class="grid md:grid-cols-3 gap-5">
-      <button onclick="switchTab('pojok-baca')" class="text-left flex gap-4 bg-white rounded-2xl p-6 shadow-md hover:shadow-lg transition">
+      <button onclick="switchTab('pojok-baca')" class="text-left flex gap-4 bg-white rounded-2xl p-5 sm:p-6 shadow-md hover:shadow-lg active:scale-[.99] transition">
         <i data-lucide="book-open-text" class="w-9 h-9 text-ct-orange shrink-0"></i>
-        <div><h3 class="text-2xl font-extrabold">Baca Cerita</h3><p class="text-slate-600 mt-1 leading-snug">Akses ribuan cerita karya pelajar Tanah Datar</p></div></button>
-      <button onclick="switchTab('pojok-karya')" class="text-left flex gap-4 bg-white rounded-2xl p-6 shadow-md hover:shadow-lg transition">
+        <div><h3 class="text-xl sm:text-2xl font-extrabold">Baca Cerita</h3><p class="text-slate-600 mt-1 leading-snug">Akses ribuan cerita karya pelajar Tanah Datar</p></div></button>
+      <button onclick="switchTab('pojok-karya')" class="text-left flex gap-4 bg-white rounded-2xl p-5 sm:p-6 shadow-md hover:shadow-lg active:scale-[.99] transition">
         <i data-lucide="house" class="w-9 h-9 text-teal-600 shrink-0"></i>
-        <div><h3 class="text-2xl font-extrabold">Tulis &amp; Terbitkan</h3><p class="text-slate-600 mt-1 leading-snug">Tulis karyamu dan terbitkan jadi antologi digital</p></div></button>
-      <button onclick="switchTab('ranking')" class="text-left flex gap-4 bg-white rounded-2xl p-6 shadow-md hover:shadow-lg transition">
+        <div><h3 class="text-xl sm:text-2xl font-extrabold">Tulis &amp; Terbitkan</h3><p class="text-slate-600 mt-1 leading-snug">Tulis karyamu dan terbitkan jadi antologi digital</p></div></button>
+      <button onclick="switchTab('ranking')" class="text-left flex gap-4 bg-white rounded-2xl p-5 sm:p-6 shadow-md hover:shadow-lg active:scale-[.99] transition">
         <i data-lucide="trophy" class="w-9 h-9 text-amber-500 shrink-0"></i>
-        <div><h3 class="text-2xl font-extrabold">Naik ke Peringkat</h3><p class="text-slate-600 mt-1 leading-snug">Kumpulkan poin dan jadi penulis terbaik</p></div></button>
+        <div><h3 class="text-xl sm:text-2xl font-extrabold">Naik ke Peringkat</h3><p class="text-slate-600 mt-1 leading-snug">Kumpulkan poin dan jadi penulis terbaik</p></div></button>
     </div>
   </div>
 </section>
 
 <!-- POJOK BACA -->
-<section id="tab-pojok-baca" class="hidden py-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+<section id="tab-pojok-baca" class="hidden py-6 sm:py-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
   <div class="flex flex-col md:flex-row md:items-end md:justify-between gap-4">
     <div><h2 class="text-3xl font-extrabold">Pojok Baca</h2><p class="text-slate-600 mt-1">Baca cerita pelajar SMA Tanah Datar dan temukan inspirasi.</p></div>
     <div class="relative w-full md:w-80"><i data-lucide="search" class="w-4 h-4 text-slate-400 absolute left-3.5 top-3.5"></i><input id="q" oninput="renderStories()" class="inp pl-10" placeholder="Cari judul, penulis, atau sekolah..." aria-label="Cari karya"></div>
@@ -103,7 +178,7 @@ body{background:#FBF8F4}
 </section>
 
 <!-- POJOK KARYA -->
-<section id="tab-pojok-karya" class="hidden py-10 max-w-5xl mx-auto px-4 sm:px-6 lg:px-8"></section>
+<section id="tab-pojok-karya" class="hidden py-6 sm:py-10 max-w-5xl mx-auto px-4 sm:px-6 lg:px-8"></section>
 
 <!-- POJOK ANTOLOGI -->
 <section id="tab-pojok-antologi" class="hidden">
@@ -208,7 +283,7 @@ body{background:#FBF8F4}
 </section>
 
 <!-- PENGEMBANG -->
-<section id="tab-pengembang" class="hidden py-10 max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
+<section id="tab-pengembang" class="hidden py-6 sm:py-10 max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
   <h2 class="text-3xl font-extrabold">Pengembang</h2>
   <p class="text-slate-600 mt-1">Kenali sosok di balik CERITAKU Ekosistem Literasi Digital.</p>
   <figure class="mt-6">
@@ -216,10 +291,10 @@ body{background:#FBF8F4}
   </figure>
 </section>
 
-<section id="tab-admin" class="hidden py-10 max-w-3xl mx-auto px-4 sm:px-6 lg:px-8"></section>
+<section id="tab-admin" class="hidden py-6 sm:py-10 max-w-3xl mx-auto px-4 sm:px-6 lg:px-8"></section>
 
 <!-- RANKING -->
-<section id="tab-ranking" class="hidden py-10 max-w-3xl mx-auto px-4 sm:px-6 lg:px-8">
+<section id="tab-ranking" class="hidden py-6 sm:py-10 max-w-3xl mx-auto px-4 sm:px-6 lg:px-8">
   <h2 class="text-3xl font-extrabold">Ranking Penulis</h2>
   <p class="text-slate-600 mt-1">Setiap karya yang disetujui guru bernilai 100 poin.</p>
   <div id="rank" class="mt-6 bg-white rounded-2xl shadow-sm divide-y"></div>
@@ -229,8 +304,8 @@ body{background:#FBF8F4}
 <footer class="text-center text-xs text-slate-500 py-6">&copy; 2026 CERITAKU &middot; Cerita Karya Anak Tanah Datar Untukmu<br>Dikembangkan oleh <a href="#/pengembang" class="font-semibold text-ct-orange hover:underline">Darma Yulia. A, S.Pd. Gr</a></footer>
 
 <!-- MODAL AUTH -->
-<div id="auth-modal" class="hidden fixed inset-0 z-50 bg-navy/60 p-4 overflow-y-auto" onclick="if(event.target===this)closeModal('auth-modal')">
-  <div class="bg-white rounded-3xl max-w-md mx-auto my-6 p-7 relative" role="dialog" aria-modal="true" aria-labelledby="auth-title">
+<div id="auth-modal" class="overlay hidden fixed inset-0 z-50 bg-navy/60 p-4 overflow-y-auto" onclick="if(event.target===this)closeModal('auth-modal')">
+  <div class="sheet bg-white rounded-3xl max-w-md mx-auto my-6 p-7 relative" role="dialog" aria-modal="true" aria-labelledby="auth-title">
     <button onclick="closeModal('auth-modal')" class="absolute top-4 right-4 text-slate-400 hover:text-navy" aria-label="Tutup"><i data-lucide="x" class="w-5 h-5"></i></button>
     <h3 id="auth-title" class="text-2xl font-extrabold"></h3>
     <p id="auth-sub" class="text-sm text-slate-600 mt-1"></p>
@@ -258,8 +333,8 @@ body{background:#FBF8F4}
 </div>
 
 <!-- MODAL BACA -->
-<div id="read-modal" class="hidden fixed inset-0 z-50 bg-navy/60 p-4 overflow-y-auto" onclick="if(event.target===this)closeModal('read-modal')">
-  <article class="bg-white rounded-3xl max-w-2xl mx-auto my-6 p-8 relative">
+<div id="read-modal" class="overlay hidden fixed inset-0 z-50 bg-navy/60 p-4 overflow-y-auto" onclick="if(event.target===this)closeModal('read-modal')">
+  <article class="sheet bg-white rounded-3xl max-w-2xl mx-auto my-6 p-8 relative">
     <button onclick="closeModal('read-modal')" class="absolute top-4 right-4 text-slate-400 hover:text-navy" aria-label="Tutup"><i data-lucide="x" class="w-5 h-5"></i></button>
     <span id="r-cat" class="text-xs font-bold px-3 py-1 rounded-full bg-ct-peach text-ct-orange"></span>
     <h3 id="r-title" class="text-3xl font-extrabold mt-3"></h3>
@@ -267,6 +342,8 @@ body{background:#FBF8F4}
     <div id="r-body" class="mt-5 space-y-4 leading-relaxed text-slate-700 max-w-prose"></div>
   </article>
 </div>
+
+<nav id="nav-mobile" class="tabbar flex lg:hidden" aria-label="Navigasi utama"></nav>
 
 <div id="toast" class="hidden fixed bottom-6 left-1/2 -translate-x-1/2 z-[60] bg-navy text-white text-sm px-5 py-3 rounded-xl shadow-lg" role="status"></div>
 
@@ -292,7 +369,9 @@ function switchTab(t,fromRoute){
   if(!fromRoute&&location.hash!=='#/'+t){location.hash='/'+t;return}
   tab=t; document.querySelectorAll('main>section').forEach(s=>s.classList.toggle('hidden',s.id!=='tab-'+t));
   const h=TABS().map(([k,l])=>`<button onclick="switchTab('${k}')" class="navlink ${k===t?'on':''}" ${k===t?'aria-current="page"':''}>${l}</button>`).join('');
-  $('nav-desktop').innerHTML=h;$('nav-mobile').innerHTML=h;
+  $('nav-desktop').innerHTML=h;
+  const IC={beranda:'house','pojok-baca':'book-open','pojok-karya':'pen-tool','pojok-antologi':'library',ranking:'trophy',admin:'shield-check'};
+  $('nav-mobile').innerHTML=TABS().filter(([k])=>IC[k]).map(([k,l])=>`<button onclick="switchTab('${k}')" class="tabbtn ${k===t?'on':''}" ${k===t?'aria-current="page"':''} aria-label="${l}"><i data-lucide="${IC[k]}"></i><span>${l.replace('Pojok ','')}</span></button>`).join('');
   ({beranda:loadStats,'pojok-baca':renderStories,'pojok-karya':renderKarya,ranking:renderRank,admin:renderAdmin})[t]?.();
   scrollTo({top:0});icons();
 }
@@ -307,8 +386,8 @@ function renderAuthArea(){
     <span class="hidden sm:block text-sm font-semibold max-w-[9rem] truncate">${esc(me.name)}</span>
     <span class="text-[11px] font-bold px-2 py-0.5 rounded-full ${b[me.role][1]}">${b[me.role][0]}</span>
     <button onclick="logout()" class="text-sm font-semibold px-3 py-1.5 rounded-full hover:bg-slate-100">Keluar</button></div>`
-  :`<button onclick="openAuth('login')" class="px-6 py-2.5 rounded-lg border border-slate-400 font-semibold hover:border-ct-orange hover:text-ct-orange transition">Masuk</button>
-    <button onclick="openAuth('register')" class="btn px-4 sm:px-5 py-2.5 text-sm sm:text-base">Daftar</button>`;
+  :`<button onclick="openAuth('login')" class="px-3.5 sm:px-6 py-2 sm:py-2.5 text-sm sm:text-base rounded-lg border border-slate-400 font-semibold hover:border-ct-orange hover:text-ct-orange transition">Masuk</button>
+    <button onclick="openAuth('register')" class="btn px-3.5 sm:px-5 py-2 sm:py-2.5 text-sm sm:text-base">Daftar</button>`;
 }
 
 /* ============ STATISTIK BERANDA (data nyata dari database) ============ */
@@ -327,8 +406,8 @@ async function renderStories(){
   if(!sb){$('stories').innerHTML=noSB();return}
   if(!pub.length||renderStories.dirty){const{data}=await sb.from('works').select('id,title,category,author_name,school_name,views').eq('status','disetujui').order('created_at',{ascending:false});pub=data||[];renderStories.dirty=false}
   const q=$('q').value.toLowerCase(),list=pub.filter(w=>(cat==='Semua'||w.category===cat)&&(w.title+w.author_name+w.school_name).toLowerCase().includes(q));
-  $('stories').innerHTML=list.map((w,i)=>`<div class="bg-white rounded-2xl overflow-hidden shadow-sm flex flex-col">
-    <div class="h-40 relative flex items-center justify-center ${['bg-ct-peach','bg-ct-teal/50','bg-ct-sun/70'][i%3]}"><i data-lucide="${w.category==='Puisi'?'feather':'book-open-text'}" class="w-12 h-12 text-navy/40"></i><span class="absolute top-3 right-3 px-3 py-1 bg-ct-orange text-white text-[10px] font-bold rounded-full">${w.category}</span></div>
+  $('stories').innerHTML=list.map((w,i)=>`<div onclick="location.hash='/baca/${w.id}'" class="bg-white rounded-2xl overflow-hidden shadow-sm flex flex-col cursor-pointer hover:shadow-md active:scale-[.99] transition">
+    <div class="h-32 sm:h-40 relative flex items-center justify-center ${['bg-ct-peach','bg-ct-teal/50','bg-ct-sun/70'][i%3]}"><i data-lucide="${w.category==='Puisi'?'feather':'book-open-text'}" class="w-12 h-12 text-navy/40"></i><span class="absolute top-3 right-3 px-3 py-1 bg-ct-orange text-white text-[10px] font-bold rounded-full">${w.category}</span></div>
     <div class="p-5"><h3 class="text-lg font-bold"><a href="#/baca/${w.id}" class="hover:text-ct-orange">${esc(w.title)}</a></h3>
     <p class="text-xs text-slate-500 mt-1">oleh <b class="text-slate-700">${esc(w.author_name)}</b> &middot; ${esc(w.school_name)}</p>
     <p class="text-xs text-slate-400 mt-2 flex items-center gap-1"><i data-lucide="eye" class="w-3.5 h-3.5"></i>${(w.views||0).toLocaleString('id-ID')} kali dibaca</p></div></div>`).join('')||'<p class="text-slate-500 col-span-full">Belum ada karya yang tayang. Jadilah penulis pertama.</p>';
@@ -369,7 +448,7 @@ async function renderKarya(){
       <p class="text-sm text-slate-700 mt-4 whitespace-pre-line leading-relaxed bg-slate-50 border border-slate-100 rounded-xl p-4">${esc(w.body)}</p>
       <label class="block text-xs font-bold text-slate-700 mt-4 mb-1" for="fb-${w.id}">Umpan balik guru</label>
       <textarea id="fb-${w.id}" class="inp" rows="2" placeholder="Catatan untuk siswa (wajib jika minta revisi)"></textarea>
-      <div class="flex flex-wrap justify-end gap-2 mt-4 pt-4 border-t border-slate-100"><button onclick="curate(${w.id},'revisi')" class="px-5 py-2.5 rounded-xl border border-slate-300 text-slate-700 font-bold text-xs hover:bg-slate-50 transition">Minta revisi</button><button onclick="curate(${w.id},'disetujui')" class="px-5 py-2.5 rounded-xl bg-emerald-600 text-white font-bold text-xs shadow hover:bg-emerald-700 transition">Setujui &amp; tayangkan</button></div></div>`).join('')||'<div class="bg-white rounded-3xl border border-slate-200 p-8 text-center text-sm text-slate-500">Belum ada karya baru dari sekolahmu.</div>')+'</div></div>';
+      <div class="flex flex-wrap justify-end gap-2 mt-4 pt-4 border-t border-slate-100"><button onclick="curate(${w.id},'revisi')" class="flex-1 sm:flex-none px-5 py-2.5 rounded-xl border border-slate-300 text-slate-700 font-bold text-xs hover:bg-slate-50 transition">Minta revisi</button><button onclick="curate(${w.id},'disetujui')" class="flex-1 sm:flex-none px-5 py-2.5 rounded-xl bg-emerald-600 text-white font-bold text-xs shadow hover:bg-emerald-700 transition">Setujui &amp; tayangkan</button></div></div>`).join('')||'<div class="bg-white rounded-3xl border border-slate-200 p-8 text-center text-sm text-slate-500">Belum ada karya baru dari sekolahmu.</div>')+'</div></div>';
     return icons();
   }
   const{data:mine=[]}=await sb.from('works').select('*').eq('author_id',me.id).order('updated_at',{ascending:false});
@@ -397,18 +476,18 @@ async function renderKarya(){
       <div><label class="block text-xs font-bold text-slate-700 mb-1" for="w-x">Isi Cerita / Teks Narasi</label><textarea id="w-x" class="inp min-h-[200px] leading-relaxed" placeholder="Tuliskan ceritamu di sini..." required></textarea></div>
       <div class="p-4 bg-amber-50 rounded-2xl border border-amber-200 flex items-start gap-2 text-xs text-amber-900"><i data-lucide="info" class="w-4 h-4 text-amber-600 shrink-0 mt-0.5"></i><span>Tulisan minimal 40 karakter sebelum dikirim ke guru. Karya yang disetujui tayang di Pojok Baca dan menambah poin rankingmu.</span></div>
       <div class="flex flex-wrap items-center justify-end gap-3 pt-4 border-t border-slate-200">
-        <span id="editing" class="text-xs text-slate-500 mr-auto"></span>
-        <button onclick="saveWork('draf')" class="px-5 py-2.5 rounded-xl border border-slate-300 text-slate-600 font-bold text-xs hover:bg-slate-50 transition">Simpan draf</button>
-        <button onclick="saveWork('menunggu')" class="btn text-xs px-6 py-2.5 shadow">Kirim ke Kurasi Guru</button>
+        <span id="editing" class="text-xs text-slate-500 sm:mr-auto w-full sm:w-auto empty:hidden"></span>
+        <button onclick="saveWork('draf')" class="flex-1 sm:flex-none px-5 py-2.5 rounded-xl border border-slate-300 text-slate-600 font-bold text-xs hover:bg-slate-50 transition">Simpan draf</button>
+        <button onclick="saveWork('menunggu')" class="btn flex-1 sm:flex-none text-xs px-6 py-2.5 shadow">Kirim ke Kurasi Guru</button>
       </div>
     </form>
   </div>
   <div class="bg-white rounded-3xl p-6 sm:p-8 border border-slate-200 shadow-sm">
     <h3 class="text-lg font-extrabold mb-4 flex items-center gap-2"><i data-lucide="clock" class="w-5 h-5 text-ct-orange"></i> Status Kurasi &amp; Terbitan Karya Saya</h3>
-    <div class="overflow-x-auto"><table class="w-full text-left text-xs">
+    <div class="overflow-x-auto"><table class="rt w-full text-left text-xs">
       <thead class="bg-slate-100 text-slate-700 font-bold uppercase border-b border-slate-200"><tr><th class="p-3">Judul Karya</th><th class="p-3">Kategori</th><th class="p-3">Terakhir Diubah</th><th class="p-3">Status Kurasi Guru</th><th class="p-3">Umpan Balik Guru</th><th class="p-3 text-center">Aksi</th></tr></thead>
       <tbody class="divide-y divide-slate-200 font-medium">`+
-      (mine.map(w=>`<tr><td class="p-3 font-bold text-slate-800">${esc(w.title)}</td><td class="p-3 text-slate-600">${esc(w.category)}</td><td class="p-3 text-slate-500 whitespace-nowrap">${tgl(w.updated_at||w.created_at)}</td><td class="p-3"><span class="px-2.5 py-1 rounded-lg font-bold whitespace-nowrap ${col[w.status]}">${lab[w.status]}</span></td><td class="p-3 text-slate-600 italic">${w.status==='revisi'&&w.feedback?esc(w.feedback):'-'}</td><td class="p-3 text-center">${['draf','revisi'].includes(w.status)?`<button onclick="editW(${w.id})" class="px-3 py-1 bg-ct-orange text-white rounded-lg font-bold hover:bg-[#d65a12] transition">Edit</button>`:'-'}</td></tr>`).join('')||'<tr><td colspan="6" class="p-6 text-center text-slate-500">Belum ada karya. Ceritamu dimulai dari formulir di atas.</td></tr>')+`</tbody></table></div>
+      (mine.map(w=>`<tr><td data-l="Judul" class="p-3 font-bold text-slate-800">${esc(w.title)}</td><td data-l="Kategori" class="p-3 text-slate-600">${esc(w.category)}</td><td data-l="Diubah" class="p-3 text-slate-500 whitespace-nowrap">${tgl(w.updated_at||w.created_at)}</td><td data-l="Status" class="p-3"><span class="px-2.5 py-1 rounded-lg font-bold whitespace-nowrap ${col[w.status]}">${lab[w.status]}</span></td><td data-l="Umpan balik" class="p-3 text-slate-600 italic">${w.status==='revisi'&&w.feedback?esc(w.feedback):'-'}</td><td data-l="Aksi" class="p-3 text-center">${['draf','revisi'].includes(w.status)?`<button onclick="editW(${w.id})" class="px-3 py-1 bg-ct-orange text-white rounded-lg font-bold hover:bg-[#d65a12] transition">Edit</button>`:'-'}</td></tr>`).join('')||'<tr><td colspan="6" class="p-6 text-center text-slate-500">Belum ada karya. Ceritamu dimulai dari formulir di atas.</td></tr>')+`</tbody></table></div>
   </div></div>`;
   eid=null;icons();
 }
@@ -431,13 +510,13 @@ async function curate(id,st){
 async function renderRank(){
   if(!sb){$('rank').innerHTML=noSB();return}
   const{data:r=[]}=await sb.from('ranking').select('*');
-  $('rank').innerHTML=r.map((x,i)=>`<div class="flex items-center gap-4 p-4"><span class="w-8 text-center font-extrabold ${i<3?'text-ct-orange':'text-slate-400'}">${i+1}</span><div class="flex-1"><b>${esc(x.author_name)}</b><p class="text-xs text-slate-500">${esc(x.school_name)}</p></div><b>${x.poin} poin</b></div>`).join('')||'<p class="p-6 text-slate-500">Belum ada penulis di peringkat. Karya yang disetujui guru akan menambah poin.</p>';
+  $('rank').innerHTML=r.map((x,i)=>`<div class="flex items-center gap-4 p-4"><span class="w-8 text-center font-extrabold ${i<3?'text-ct-orange':'text-slate-400'}">${i+1}</span><div class="flex-1 min-w-0"><b class="block truncate">${esc(x.author_name)}</b><p class="text-xs text-slate-500 truncate">${esc(x.school_name)}</p></div><b class="shrink-0 whitespace-nowrap">${x.poin} poin</b></div>`).join('')||'<p class="p-6 text-slate-500">Belum ada penulis di peringkat. Karya yang disetujui guru akan menambah poin.</p>';
 }
 async function renderAdmin(){
   const el=$('tab-admin');if(me?.role!=='admin'){el.innerHTML='';return}
   const{data:g=[]}=await sb.from('profiles').select('*,schools(name)').eq('role','guru').order('verified').order('created_at',{ascending:false});
   el.innerHTML=`<h2 class="text-3xl font-extrabold">Verifikasi Guru</h2><p class="text-slate-600 mt-1">Setujui hanya guru yang sudah kamu pastikan identitasnya.</p><div class="mt-6 bg-white rounded-2xl shadow-sm divide-y">`+
-  (g.map(u=>`<div class="p-4 flex items-center gap-3"><div class="flex-1"><b>${esc(u.name)}</b><p class="text-xs text-slate-500">${esc(u.email)} &middot; ${esc(u.schools?.name)} &middot; NIP ${esc(u.ident||'-')}</p></div>${u.verified?'<span class="text-xs font-bold text-emerald-700">Terverifikasi</span>':`<button onclick="verifyGuru('${u.id}')" class="btn py-2 text-sm">Verifikasi</button>`}</div>`).join('')||'<p class="p-6 text-slate-500">Belum ada guru terdaftar.</p>')+'</div>';
+  (g.map(u=>`<div class="p-4 flex flex-wrap items-center gap-3"><div class="flex-1 min-w-[12rem] break-words"><b>${esc(u.name)}</b><p class="text-xs text-slate-500">${esc(u.email)} &middot; ${esc(u.schools?.name)} &middot; NIP ${esc(u.ident||'-')}</p></div>${u.verified?'<span class="text-xs font-bold text-emerald-700">Terverifikasi</span>':`<button onclick="verifyGuru('${u.id}')" class="btn py-2 text-sm">Verifikasi</button>`}</div>`).join('')||'<p class="p-6 text-slate-500">Belum ada guru terdaftar.</p>')+'</div>';
 }
 async function verifyGuru(id){const{error}=await sb.from('profiles').update({verified:true}).eq('id',id);toast(error?error.message:'Guru terverifikasi');renderAdmin()}
 
