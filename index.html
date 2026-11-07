@@ -36,7 +36,7 @@ body{-webkit-tap-highlight-color:transparent;overflow-x:hidden;
   padding-left:env(safe-area-inset-left);padding-right:env(safe-area-inset-right)}
 button,a,select,input,textarea{touch-action:manipulation}
 header{padding-top:env(safe-area-inset-top)}
-body:has(#auth-modal:not(.hidden)),body:has(#read-modal:not(.hidden)){overflow:hidden}
+body:has(#auth-modal:not(.hidden)),body:has(#read-modal:not(.hidden)),body:has(#anto-modal:not(.hidden)){overflow:hidden}
 
 /* Bar navigasi bawah (hanya < 1024px) */
 .tabbar{position:fixed;left:0;right:0;bottom:0;z-index:40;background:rgba(255,255,255,.97);
@@ -99,6 +99,25 @@ body:has(#auth-modal:not(.hidden)),body:has(#read-modal:not(.hidden)){overflow:h
 
 /* Layar sangat sempit */
 @media (max-width:359px){.tabbtn{font-size:10px}}
+
+/* ===== ANTOLOGI PER SEKOLAH ===== */
+.anto-prose p{margin:0 0 .9rem}
+#print-area{display:none}
+@media print{
+  @page{size:A5;margin:18mm 16mm}
+  body{background:#fff!important;padding:0!important;display:block!important;overflow:visible!important}
+  body>*:not(#print-area){display:none!important}
+  #print-area{display:block!important;font-family:Georgia,"Times New Roman",serif;color:#111;font-size:11.5pt;line-height:1.6}
+  .pa-cover{min-height:165mm;display:flex;flex-direction:column;justify-content:center;align-items:center;text-align:center;border:2px solid #14213D;padding:12mm}
+  .pa-cover small{letter-spacing:.2em;text-transform:uppercase;font-size:8pt}
+  .pa-cover h1{font-size:26pt;line-height:1.2;margin:8mm 0 4mm}
+  .pa-cover p{margin:0}
+  .pa-toc,.pa-story{break-before:page;page-break-before:always}
+  .pa-toc h2,.pa-story h2{font-size:18pt;margin:0 0 3mm}
+  .pa-toc ol{padding-left:6mm}.pa-toc li{margin-bottom:2.5mm}
+  .pa-meta{font-size:9.5pt;color:#555;margin:0 0 6mm}
+  .pa-story p{margin:0 0 3.5mm;text-align:justify;orphans:3;widows:3}
+}
 </style>
 </head>
 <body class="font-sans text-navy antialiased min-h-screen flex flex-col">
@@ -199,86 +218,18 @@ body:has(#auth-modal:not(.hidden)),body:has(#read-modal:not(.hidden)){overflow:h
 
   <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10 space-y-12">
 
-    <!-- Antologi utama: Jilid 1 -->
-    <div class="bg-white rounded-3xl border border-slate-200 shadow-lg p-6 sm:p-8">
-      <div class="grid grid-cols-1 lg:grid-cols-12 gap-8 items-center">
-
-        <div class="lg:col-span-5 flex flex-col items-center justify-center p-6 bg-slate-50 rounded-2xl border border-slate-100 relative">
-          <span class="absolute top-4 left-4 px-3 py-1 rounded-full text-[10px] font-extrabold bg-ct-orange text-white">Antologi Terbaru</span>
-          <div class="w-56 h-80 bg-gradient-to-tr from-amber-900 via-orange-700 to-amber-600 rounded-r-xl rounded-l-sm shadow-2xl p-4 border-l-8 border-navy text-white flex flex-col justify-between transform hover:rotate-1 transition duration-300">
-            <div class="border-2 border-amber-300/40 p-3 h-full flex flex-col justify-between rounded">
-              <div class="text-center">
-                <p class="text-[9px] uppercase tracking-widest text-amber-200">Terbitan Resmi Tanah Datar</p>
-                <h3 class="text-lg font-extrabold mt-2 leading-tight">Antologi Ceritaku Tanah Datar</h3>
-                <p class="text-xs font-bold text-amber-300 mt-1">Jilid 1</p>
-              </div>
-              <div class="my-2 bg-amber-950/40 rounded p-2 text-center border border-amber-300/20">
-                <svg viewBox="6 6 44 30" class="w-full h-16" aria-hidden="true"><path d="M9 33C17 30.5 19.5 22 21 9c1.6 8.5 3.8 13.2 7 14.6C31.2 22.2 33.4 17.5 35 9c1.5 13 4 21.5 12 24-6.5-1.8-12.5-3.2-19-3.200S15.5 31.2 9 33Z" fill="#F59E0B"/><circle cx="28" cy="17.5" r="2.6" fill="#FEF3C7"/></svg>
-              </div>
-              <div class="text-center"><p class="text-[9px] text-amber-200">Kumpulan Cerita Terbaik Pelajar</p></div>
-            </div>
-          </div>
-          <p class="text-[11px] font-semibold text-slate-500 mt-4">Sampul Desain &bull; Edisi Cetak &amp; Digital</p>
+    <!-- Antologi otomatis per sekolah -->
+    <div id="anto-sekolah">
+      <div class="flex flex-wrap items-end justify-between gap-4 mb-6">
+        <div>
+          <span class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-teal-100 text-teal-800 text-[11px] font-extrabold"><i data-lucide="sparkles" class="w-3.5 h-3.5"></i>Disusun otomatis</span>
+          <h3 class="text-xl font-extrabold mt-2">Antologi per Sekolah</h3>
+          <p class="text-xs text-slate-500 mt-1 max-w-xl">Setiap karya yang disetujui guru langsung dihimpun menjadi satu antologi untuk sekolah penulisnya, tanpa perlu menyusun manual.</p>
         </div>
-
-        <div class="lg:col-span-7 space-y-6">
-          <div>
-            <h3 class="text-2xl sm:text-3xl font-extrabold">Antologi Ceritaku Tanah Datar Jilid 1</h3>
-            <p class="text-xs text-slate-500 font-medium mt-1">Kumpulan 24 cerita terbaik dari pelajar SMA se-Tanah Datar &bull; Tahun 2025</p>
-          </div>
-
-          <div class="grid grid-cols-2 sm:grid-cols-3 gap-3">
-            <div class="p-3 bg-slate-50 rounded-xl border border-slate-200 text-center"><p class="text-[10px] text-slate-400 font-bold uppercase">ISBN Resmi</p><p class="text-xs font-extrabold mt-0.5">978-623-XXXX-12-5</p></div>
-            <div class="p-3 bg-slate-50 rounded-xl border border-slate-200 text-center"><p class="text-[10px] text-slate-400 font-bold uppercase">Tanggal Terbit</p><p class="text-xs font-extrabold mt-0.5">15 Agustus 2025</p></div>
-            <div class="p-3 bg-slate-50 rounded-xl border border-slate-200 text-center col-span-2 sm:col-span-1"><p class="text-[10px] text-slate-400 font-bold uppercase">Sekolah &amp; Penulis</p><p class="text-xs font-extrabold mt-0.5">12 Sekolah &bull; 24 Penulis</p></div>
-          </div>
-
-          <div class="inline-flex items-center gap-2 px-3 py-1 rounded-lg bg-emerald-100 text-emerald-800 text-xs font-bold"><i data-lucide="check-circle" class="w-4 h-4"></i><span>Sudah Terbit &amp; Terdistribusi</span></div>
-
-          <div class="flex flex-wrap items-center gap-3">
-            <button onclick="toast('Berkas PDF antologi belum tersedia.')" class="btn py-2.5 px-5 text-xs shadow flex items-center gap-2"><i data-lucide="download" class="w-4 h-4"></i><span>Unduh PDF</span></button>
-            <button onclick="navigator.clipboard?navigator.clipboard.writeText(location.href).then(()=>toast('Tautan disalin ke papan klip'),()=>toast('Gagal menyalin tautan')):toast('Gagal menyalin tautan')" class="px-5 py-2.5 rounded-xl border border-slate-300 font-bold text-xs text-slate-700 hover:bg-slate-50 transition flex items-center gap-2"><i data-lucide="share-2" class="w-4 h-4"></i><span>Bagikan</span></button>
-            <button onclick="toast('Halaman detail antologi segera hadir.')" class="px-5 py-2.5 rounded-xl border border-slate-300 font-bold text-xs text-slate-700 hover:bg-slate-50 transition flex items-center gap-2"><i data-lucide="eye" class="w-4 h-4"></i><span>Lihat Detail</span></button>
-          </div>
-
-          <div class="pt-4 border-t border-slate-200">
-            <h4 class="text-xs font-extrabold uppercase tracking-wider mb-4">Alur Penerbitan Antologi</h4>
-            <div class="grid grid-cols-2 sm:grid-cols-4 gap-2 text-center">
-              <div class="p-3 bg-orange-50 border border-orange-200 rounded-xl"><span class="px-2 py-0.5 bg-ct-orange text-white text-[10px] font-bold rounded">Step 1</span><p class="text-xs font-extrabold mt-1">Tulis Cerita</p><p class="text-[11px] text-slate-500 mt-0.5">Siswa unggah karya di Pojok Karya</p></div>
-              <div class="p-3 bg-teal-50 border border-teal-200 rounded-xl"><span class="px-2 py-0.5 bg-teal-600 text-white text-[10px] font-bold rounded">Step 2</span><p class="text-xs font-extrabold mt-1">Kurasi Guru</p><p class="text-[11px] text-slate-500 mt-0.5">Tim kurasi menelaah &amp; memilih karya</p></div>
-              <div class="p-3 bg-sky-50 border border-sky-200 rounded-xl"><span class="px-2 py-0.5 bg-sky-600 text-white text-[10px] font-bold rounded">Step 3</span><p class="text-xs font-extrabold mt-1">Terbitkan</p><p class="text-[11px] text-slate-500 mt-0.5">Desain &amp; layout jadi antologi</p></div>
-              <div class="p-3 bg-purple-50 border border-purple-200 rounded-xl"><span class="px-2 py-0.5 bg-purple-600 text-white text-[10px] font-bold rounded">Step 4</span><p class="text-xs font-extrabold mt-1">Jadi Buku</p><p class="text-[11px] text-slate-500 mt-0.5">Terbit digital &amp; cetak ber-ISBN</p></div>
-            </div>
-          </div>
-        </div>
+        <div class="relative w-full sm:w-72"><i data-lucide="search" class="w-4 h-4 text-slate-400 absolute left-3.5 top-3.5"></i><input id="anto-q" oninput="renderAntoList()" class="inp pl-10" placeholder="Cari sekolah..." aria-label="Cari sekolah"></div>
       </div>
+      <div id="anto-auto" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6"></div>
     </div>
-
-    <!-- Antologi lainnya -->
-    <div>
-      <div class="flex items-center justify-between mb-6">
-        <h3 class="text-xl font-extrabold">Antologi Terbit</h3>
-        <button onclick="toast('Arsip antologi lengkap segera hadir.')" class="text-xs font-bold text-ct-orange hover:underline flex items-center gap-1">Lihat Semua <i data-lucide="arrow-right" class="w-4 h-4"></i></button>
-      </div>
-      <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
-        <div class="bg-white rounded-3xl p-5 border border-slate-200 shadow-sm flex flex-col justify-between space-y-4">
-          <div class="h-44 bg-gradient-to-tr from-sky-800 to-indigo-600 rounded-2xl flex items-center justify-center text-white p-4"><div class="text-center"><p class="text-[10px] font-bold text-sky-200">ANTOLOGI TANAH DATAR</p><h4 class="text-base font-extrabold mt-1">Jilid 2</h4><p class="text-[11px] text-sky-100 mt-1">Kisah di Ranah Minang</p></div></div>
-          <div><h4 class="font-bold text-center">Antologi Ceritaku Tanah Datar Jilid 2</h4><p class="text-xs text-slate-500 text-center mt-1">Jilid 2 &bull; 18 Cerita</p><p class="text-[10px] text-slate-400 text-center mt-0.5">ISBN: 978-623-XXXX-13-2</p></div>
-          <div class="pt-3 border-t border-slate-100 flex items-center justify-between text-[11px]"><span class="text-slate-400">Statistik baca segera hadir</span><span class="px-2 py-0.5 bg-emerald-100 text-emerald-800 font-bold rounded text-[10px]">Tersedia PDF</span></div>
-        </div>
-        <div class="bg-white rounded-3xl p-5 border border-slate-200 shadow-sm flex flex-col justify-between space-y-4">
-          <div class="h-44 bg-gradient-to-tr from-emerald-800 to-teal-600 rounded-2xl flex items-center justify-center text-white p-4"><div class="text-center"><p class="text-[10px] font-bold text-emerald-200">ANTOLOGI TANAH DATAR</p><h4 class="text-base font-extrabold mt-1">Jilid 3</h4><p class="text-[11px] text-emerald-100 mt-1">Inovasi Literasi Remaja</p></div></div>
-          <div><h4 class="font-bold text-center">Antologi Ceritaku Tanah Datar Jilid 3</h4><p class="text-xs text-slate-500 text-center mt-1">Jilid 3 &bull; 20 Cerita</p><p class="text-[10px] text-slate-400 text-center mt-0.5">ISBN: 978-623-XXXX-14-9</p></div>
-          <div class="pt-3 border-t border-slate-100 flex items-center justify-between text-[11px]"><span class="text-slate-400">Statistik baca segera hadir</span><span class="px-2 py-0.5 bg-sky-100 text-sky-800 font-bold rounded text-[10px]">Baru Rilis</span></div>
-        </div>
-        <div class="bg-white rounded-3xl p-5 border border-slate-200 shadow-sm flex flex-col justify-between space-y-4">
-          <div class="h-44 bg-gradient-to-tr from-amber-800 to-red-700 rounded-2xl flex items-center justify-center text-white p-4"><div class="text-center"><p class="text-[10px] font-bold text-amber-200">EDISI KHUSUS</p><h4 class="text-base font-extrabold mt-1">Warisan Budaya</h4><p class="text-[11px] text-amber-100 mt-1">Legenda Marapi &amp; Singkarak</p></div></div>
-          <div><h4 class="font-bold text-center">Antologi Ceritaku - Edisi Khusus</h4><p class="text-xs text-slate-500 text-center mt-1">Edisi Khusus &bull; 15 Cerita</p><p class="text-[10px] text-slate-400 text-center mt-0.5">ISBN: 978-623-XXXX-10-1</p></div>
-          <div class="pt-3 border-t border-slate-100 flex items-center justify-between text-[11px]"><span class="text-slate-400">Statistik baca segera hadir</span><span class="px-2 py-0.5 bg-amber-100 text-amber-800 font-bold rounded text-[10px]">Arsip</span></div>
-        </div>
-      </div>
-    </div>
-
   </div>
 </section>
 
@@ -343,6 +294,15 @@ body:has(#auth-modal:not(.hidden)),body:has(#read-modal:not(.hidden)){overflow:h
   </article>
 </div>
 
+<!-- MODAL ANTOLOGI -->
+<div id="anto-modal" class="overlay hidden fixed inset-0 z-50 bg-navy/60 p-4 overflow-y-auto" onclick="if(event.target===this)closeModal('anto-modal')">
+  <article class="sheet bg-white rounded-3xl max-w-3xl mx-auto my-6 p-6 sm:p-8 relative" role="dialog" aria-modal="true" aria-label="Antologi sekolah">
+    <button onclick="closeModal('anto-modal')" class="absolute top-4 right-4 text-slate-400 hover:text-navy" aria-label="Tutup"><i data-lucide="x" class="w-5 h-5"></i></button>
+    <div id="anto-body"></div>
+  </article>
+</div>
+<div id="print-area" aria-hidden="true"></div>
+
 <nav id="nav-mobile" class="tabbar flex lg:hidden" aria-label="Navigasi utama"></nav>
 
 <div id="toast" class="hidden fixed bottom-6 left-1/2 -translate-x-1/2 z-[60] bg-navy text-white text-sm px-5 py-3 rounded-xl shadow-lg" role="status"></div>
@@ -372,7 +332,7 @@ function switchTab(t,fromRoute){
   $('nav-desktop').innerHTML=h;
   const IC={beranda:'house','pojok-baca':'book-open','pojok-karya':'pen-tool','pojok-antologi':'library',ranking:'trophy',admin:'shield-check'};
   $('nav-mobile').innerHTML=TABS().filter(([k])=>IC[k]).map(([k,l])=>`<button onclick="switchTab('${k}')" class="tabbtn ${k===t?'on':''}" ${k===t?'aria-current="page"':''} aria-label="${l}"><i data-lucide="${IC[k]}"></i><span>${l.replace('Pojok ','')}</span></button>`).join('');
-  ({beranda:loadStats,'pojok-baca':renderStories,'pojok-karya':renderKarya,ranking:renderRank,admin:renderAdmin})[t]?.();
+  ({beranda:loadStats,'pojok-baca':renderStories,'pojok-karya':renderKarya,'pojok-antologi':renderAntologi,ranking:renderRank,admin:renderAdmin})[t]?.();
   scrollTo({top:0});icons();
 }
 function route(){
@@ -506,6 +466,84 @@ async function curate(id,st){
   renderStories.dirty=true;toast(st==='disetujui'?'Karya ditayangkan':'Revisi dikirim ke siswa');renderKarya();
 }
 
+/* ============ POJOK ANTOLOGI (otomatis, 1 antologi per sekolah) ============ */
+const COVERS=['from-amber-900 via-orange-700 to-amber-600','from-sky-800 to-indigo-600','from-emerald-800 to-teal-600','from-rose-800 to-orange-600','from-purple-800 to-fuchsia-600','from-slate-800 to-cyan-700'];
+let antoData=[],antoCur=null;
+const paras=t=>String(t||'').split('\n\n').map(p=>`<p>${esc(p.trim()).replace(/\n/g,'<br>')}</p>`).join('');
+async function renderAntologi(){
+  const el=$('anto-auto'); if(!el)return;
+  if(!sb){el.innerHTML=noSB();return}
+  el.innerHTML='<p class="text-sm text-slate-500 col-span-full">Menyusun antologi...</p>';
+  const{data,error}=await sb.from('works').select('id,title,category,author_name,school_id,school_name,views,created_at').eq('status','disetujui').order('created_at');
+  if(error){el.innerHTML='<p class="text-sm text-red-600 col-span-full">Gagal memuat antologi: '+esc(error.message)+'</p>';return}
+  const m=new Map();
+  (data||[]).forEach(w=>{const k=w.school_id??w.school_name;if(!m.has(k))m.set(k,{sid:w.school_id??null,name:w.school_name,works:[]});m.get(k).works.push(w)});
+  antoData=[...m.values()].sort((a,b)=>b.works.length-a.works.length||String(a.name).localeCompare(String(b.name),'id'));
+  renderAntoList();
+}
+function renderAntoList(){
+  const el=$('anto-auto'),q=($('anto-q').value||'').toLowerCase(),yr=new Date().getFullYear();
+  const list=antoData.map((s,i)=>({s,i})).filter(({s})=>String(s.name).toLowerCase().includes(q));
+  if(!antoData.length){el.innerHTML='<div class="col-span-full bg-white rounded-2xl border border-slate-200 p-8 text-center text-sm text-slate-500">Belum ada karya yang disetujui. Antologi tiap sekolah akan muncul otomatis begitu guru menyetujui karya pertama.</div>';return}
+  el.innerHTML=list.map(({s,i})=>{
+    const au=new Set(s.works.map(w=>w.author_name)).size,v=s.works.reduce((a,w)=>a+(w.views||0),0);
+    return `<div class="bg-white rounded-3xl border border-slate-200 shadow-sm overflow-hidden flex flex-col">
+      <div class="h-48 bg-gradient-to-tr ${COVERS[i%COVERS.length]} p-5 text-white border-l-8 border-navy flex flex-col justify-between">
+        <p class="text-[9px] uppercase tracking-widest text-amber-200 font-bold">Antologi Cerita &middot; ${yr}</p>
+        <h4 class="text-lg font-extrabold leading-tight">${esc(s.name)}</h4>
+        <p class="text-[11px] text-white/80">Kumpulan karya pelajar &middot; Tanah Datar</p>
+      </div>
+      <div class="p-5 flex-1 flex flex-col gap-4">
+        <div class="grid grid-cols-3 gap-2 text-center">
+          <div class="rounded-xl bg-slate-50 border border-slate-100 py-2"><b class="block text-base">${s.works.length}</b><span class="text-[10px] text-slate-500 font-semibold">Cerita</span></div>
+          <div class="rounded-xl bg-slate-50 border border-slate-100 py-2"><b class="block text-base">${au}</b><span class="text-[10px] text-slate-500 font-semibold">Penulis</span></div>
+          <div class="rounded-xl bg-slate-50 border border-slate-100 py-2"><b class="block text-base">${v.toLocaleString('id-ID')}</b><span class="text-[10px] text-slate-500 font-semibold">Dibaca</span></div>
+        </div>
+        <div class="flex gap-2 mt-auto">
+          <button onclick="openAnto(${i})" class="btn flex-1 text-xs py-2.5 flex items-center justify-center gap-2"><i data-lucide="book-open" class="w-4 h-4"></i>Baca</button>
+          <button onclick="openAnto(${i},true)" class="flex-1 px-4 py-2.5 rounded-xl border border-slate-300 font-bold text-xs text-slate-700 hover:bg-slate-50 flex items-center justify-center gap-2"><i data-lucide="file-down" class="w-4 h-4"></i>PDF</button>
+        </div>
+      </div></div>`}).join('')||'<p class="text-sm text-slate-500 col-span-full">Sekolah tidak ditemukan.</p>';
+  icons();
+}
+async function openAnto(i,andPrint){
+  const s=antoData[i]; if(!s)return;
+  let q=sb.from('works').select('id,title,category,author_name,body,views,created_at').eq('status','disetujui').order('created_at');
+  q=s.sid!=null?q.eq('school_id',s.sid):q.eq('school_name',s.name);
+  const{data,error}=await q; if(error||!data||!data.length)return toast('Gagal memuat antologi');
+  antoCur={name:s.name,works:data,color:COVERS[i%COVERS.length]};
+  if(andPrint)return antoPrint();
+  const au=new Set(data.map(w=>w.author_name)).size;
+  $('anto-body').innerHTML=`
+    <div class="rounded-2xl bg-gradient-to-tr ${antoCur.color} text-white p-6 border-l-8 border-navy">
+      <p class="text-[10px] uppercase tracking-widest text-amber-200 font-bold">Antologi Cerita &middot; ${new Date().getFullYear()}</p>
+      <h3 class="text-2xl sm:text-3xl font-extrabold mt-2 leading-tight pr-8">${esc(s.name)}</h3>
+      <p class="text-xs text-white/80 mt-2">${data.length} karya &middot; ${au} penulis</p>
+    </div>
+    <div class="flex flex-wrap gap-2 mt-4">
+      <button onclick="antoPrint()" class="btn text-xs py-2.5 px-5 flex items-center gap-2"><i data-lucide="file-down" class="w-4 h-4"></i>Cetak / Simpan PDF</button>
+    </div>
+    <h4 class="text-sm font-extrabold uppercase tracking-wider mt-8 mb-3">Daftar Isi</h4>
+    <ol class="space-y-1">${data.map((w,n)=>`<li><button onclick="document.getElementById('as-${w.id}').scrollIntoView({behavior:'smooth',block:'start'})" class="w-full text-left flex gap-3 py-2 px-3 rounded-xl hover:bg-orange-50"><span class="w-6 font-extrabold text-ct-orange shrink-0">${n+1}</span><span class="min-w-0"><b class="block truncate">${esc(w.title)}</b><span class="text-xs text-slate-500">${esc(w.author_name)} &middot; ${esc(w.category)}</span></span></button></li>`).join('')}</ol>
+    <div class="mt-8 space-y-10">${data.map((w,n)=>`<section id="as-${w.id}" class="pt-8 border-t border-slate-200 scroll-mt-4">
+      <span class="text-[11px] font-bold px-3 py-1 rounded-full bg-ct-peach text-ct-orange">${esc(w.category)}</span>
+      <h4 class="text-2xl font-extrabold mt-3">${n+1}. ${esc(w.title)}</h4>
+      <p class="text-sm text-slate-500 mt-1">oleh <b class="text-slate-700">${esc(w.author_name)}</b></p>
+      <div class="anto-prose mt-4 leading-relaxed text-slate-700 max-w-prose">${paras(w.body)}</div></section>`).join('')}</div>`;
+  $('anto-modal').classList.remove('hidden');icons();
+}
+function antoPrint(){
+  if(!antoCur)return;
+  const{name,works}=antoCur,au=new Set(works.map(w=>w.author_name)).size,yr=new Date().getFullYear();
+  $('print-area').innerHTML=`<section class="pa-cover"><small>Antologi Cerita &middot; Tanah Datar</small><h1>${esc(name)}</h1><p>${works.length} karya &middot; ${au} penulis</p><p style="margin-top:10mm;font-size:9pt">CERITAKU &middot; ${yr}</p></section>
+  <section class="pa-toc"><h2>Daftar Isi</h2><ol>${works.map(w=>`<li><b>${esc(w.title)}</b><br><span style="font-size:9.5pt;color:#555">${esc(w.author_name)}</span></li>`).join('')}</ol></section>`+
+  works.map((w,n)=>`<section class="pa-story"><h2>${n+1}. ${esc(w.title)}</h2><p class="pa-meta">${esc(w.author_name)} &middot; ${esc(w.category)}</p>${paras(w.body)}</section>`).join('');
+  const old=document.title;document.title='Antologi Cerita '+name;
+  const done=()=>{document.title=old;removeEventListener('afterprint',done)};
+  addEventListener('afterprint',done);
+  setTimeout(()=>window.print(),80);
+}
+
 /* ============ RANKING & ADMIN ============ */
 async function renderRank(){
   if(!sb){$('rank').innerHTML=noSB();return}
@@ -561,7 +599,7 @@ async function afterAuth(isNew){
 async function logout(){await sb.auth.signOut();me=null;renderAuthArea();toast('Kamu sudah keluar');location.hash='/beranda';route()}
 
 /* ============ INIT ============ */
-document.addEventListener('keydown',e=>{if(e.key==='Escape'){closeModal('auth-modal');closeModal('read-modal')}});
+document.addEventListener('keydown',e=>{if(e.key==='Escape'){closeModal('auth-modal');closeModal('read-modal');closeModal('anto-modal')}});
 addEventListener('hashchange',route);
 (async()=>{await loadMe();renderAuthArea();route()})();
 </script>
